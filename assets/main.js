@@ -81,55 +81,44 @@ function skyline() {
   return svg(`0 0 ${W} ${G + 2}`, parts.join(""), "xMidYMax meet");
 }
 
-// One animal per project, same single-line style
-const ANIMALS = {
-  owl: () => svg("0 0 200 200", `
-    <path ${L} d="M30 172 H170"/>
-    <path ${L} d="M72 170 C54 140 54 86 78 62 L70 36 L92 52 Q100 48 108 52 L130 36 L122 62 C146 86 146 140 128 170 Z"/>
-    <circle ${L} cx="86" cy="82" r="14"/><circle ${L} cx="114" cy="82" r="14"/>
-    <circle ${L} cx="88" cy="84" r="4"/><circle ${L} cx="112" cy="84" r="4"/>
-    <path ${L} d="M95 98 L100 108 L105 98"/>
-    <path ${L} d="M68 112 Q82 136 78 162 M132 112 Q118 136 122 162"/>
-    <path ${L} d="M92 124 l4 4 l4 -4 l4 4 l4 -4 M96 138 l4 4 l4 -4"/>
-    <path ${L} d="M88 170 v6 M94 170 v6 M106 170 v6 M112 170 v6"/>`, "xMidYMid meet"),
-  elephant: () => svg("0 0 200 200", `
-    <path ${L} d="M20 156 H184"/>
-    <path ${L} d="M60 72 Q72 58 94 62 Q132 50 160 66 Q180 78 176 112 L176 154 L162 154 L160 124 Q134 132 110 126 L108 154 L94 154 L92 122 Q82 118 74 114 Q68 132 62 146 Q56 158 46 152 Q42 146 50 140 Q56 126 54 108 Q46 84 60 72 Z"/>
-    <path ${L} d="M150 128 V154 H140 V130"/>
-    <path ${L} d="M86 70 Q108 70 106 96 Q104 116 86 110"/>
-    <circle ${L} cx="70" cy="84" r="1.8"/>
-    <path ${L} d="M62 108 Q68 120 80 117"/>
-    <path ${L} d="M176 84 Q186 92 184 106"/>`, "xMidYMid meet"),
-  bee: () => svg("0 0 200 200", `
-    <g opacity=".45">
-      <path ${L} d="M132 30 l12 -7 l12 7 v14 l-12 7 l-12 -7 Z"/>
-      <path ${L} d="M156 30 l12 -7 l12 7 v14 l-12 7 l-12 -7 Z"/>
-      <path ${L} d="M144 51 l12 -7 l12 7 v14 l-12 7 l-12 -7 Z"/>
-      <path ${L} d="M22 150 l12 -7 l12 7 v14 l-12 7 l-12 -7 Z"/>
-      <path ${L} d="M46 150 l12 -7 l12 7 v14 l-12 7 l-12 -7 Z"/>
-    </g>
-    <ellipse ${L} cx="112" cy="112" rx="40" ry="26"/>
-    <path ${L} d="M100 87 Q92 112 100 137 M120 86 Q112 112 120 138 M138 92 Q132 112 138 132"/>
-    <circle ${L} cx="64" cy="108" r="16"/>
-    <circle ${L} cx="58" cy="104" r="1.8"/>
-    <path ${L} d="M58 93 Q52 76 42 74 M68 92 Q70 76 64 66"/>
-    <path ${L} d="M151 108 L164 112 L151 117"/>
-    <path ${L} d="M104 88 Q86 52 108 46 Q128 48 116 87 M122 88 Q132 56 152 60 Q164 72 132 92"/>
-    <path ${L} d="M96 137 l-4 10 M112 138 l-2 10 M128 136 l2 10"/>`, "xMidYMid meet"),
-  penguins: () => {
-    const one = `
-      <path ${L} d="M66 62 Q46 64 44 100 Q40 146 52 166 L82 166 Q94 146 90 100 Q87 64 66 62 Z"/>
-      <path ${L} d="M70 88 Q58 102 60 136 Q62 160 70 162 Q80 160 81 136 Q82 102 70 88 Z"/>
-      <circle ${L} cx="74" cy="76" r="1.8"/>
-      <path ${L} d="M86 78 L96 82 L86 86"/>
-      <path ${L} d="M48 106 Q36 126 42 142"/>
-      <path ${L} d="M56 166 l-4 6 M78 166 l4 6"/>`;
-    return svg("0 0 200 200", `
-      <path ${L} d="M20 172 H180"/>
-      <path ${L} d="M100 44 C94 36 84 42 92 50 L100 58 L108 50 C116 42 106 36 100 44 Z"/>
-      <g>${one}</g><g transform="translate(200 0) scale(-1 1)">${one}</g>`, "xMidYMid meet");
-  },
-};
+// Project visual: app screens, photos/video, or an empty "no image" box
+function visual(p) {
+  const shots = p.screens || [];
+  const media = p.media || [];
+  if (shots.length) {
+    return `
+      <div class="vis phones frame">
+        ${shots.map((sc, k) => `
+          <button class="phone screen" style="--k:${k};--n:${shots.length}" data-src="${esc(sc.src)}" data-cap="${esc(sc.caption)}">
+            <img src="${esc(sc.src)}" alt="${esc(p.title)}: ${esc(sc.caption)}" loading="lazy">
+            <span class="tag mono">${pad(k + 1)}</span>
+          </button>`).join("")}
+      </div>
+      <ol class="vis-cap">${shots.map((sc, k) => `<li class="label"><b>${pad(k + 1)}</b> ${esc(sc.caption)}</li>`).join("")}</ol>`;
+  }
+  if (media.length) {
+    return `
+      <div class="vis stack-media frame">
+        ${media.map((m, k) => `
+          <figure class="m ${m.type}">
+            ${m.type === "video"
+              ? `<video poster="${esc(m.poster || "")}" controls playsinline preload="none">
+                  ${m.webm ? `<source src="${esc(m.webm)}" type="video/webm">` : ""}
+                  <source src="${esc(m.src)}" type="video/mp4">
+                </video>`
+              : `<button class="screen" data-src="${esc(m.src)}" data-cap="${esc(m.caption)}"><img src="${esc(m.src)}" alt="${esc(m.caption)}" loading="lazy"></button>`}
+            <span class="tag mono">${pad(k + 1)}${m.type === "video" ? " ▸" : ""}</span>
+          </figure>`).join("")}
+      </div>
+      <ol class="vis-cap">${media.map((m, k) => `<li class="label"><b>${pad(k + 1)}</b> ${esc(m.caption)}</li>`).join("")}</ol>`;
+  }
+  return `
+      <div class="vis empty frame" role="img" aria-label="No image yet">
+        <svg viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 L100 75 M100 0 L0 75"/></svg>
+        <span class="mono">no image</span>
+      </div>
+      <ol class="vis-cap"><li class="label">images coming soon</li></ol>`;
+}
 
 function render() {
   $("#intro").textContent = DEFAULT_INTRO;
@@ -158,10 +147,7 @@ function render() {
 
   $("#projectGrid").innerHTML = C.projects.map((p, i) => `
     <article class="spotlight reveal" ${lensAttr(p.lens)}>
-      <div class="animal-wrap">
-        <div class="animal frame draw">${(ANIMALS[p.animal] || ANIMALS.owl)()}</div>
-        <div class="animal-cap label"><span>fig.${pad(i + 1)} · ${esc(p.animal || "")}</span><span class="note">${esc(p.animalNote || "")}</span></div>
-      </div>
+      <div class="vis-wrap">${visual(p)}</div>
       <div class="sp-body">
         <div class="idx label"><span>${pad(i + 1)} / ${pad(C.projects.length)}</span><span>${esc(p.kind)}</span></div>
         <h3>${esc(p.title)}</h3>
@@ -169,29 +155,8 @@ function render() {
         <p>${emphasize(esc(p.blurb))}</p>
         ${p.stat ? `<div class="metric"><span class="label">key metric</span><b>${esc(p.stat)}</b></div>` : ""}
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
-        <div class="links">${p.links.length ? linkList(p.links) : `<span class="soon">// demo + images coming soon</span>`}</div>
+        ${p.links.length ? `<div class="links">${linkList(p.links)}</div>` : ""}
       </div>
-      ${p.media?.length ? `
-      <div class="media">
-        ${p.media.map((m, k) => `
-          <figure class="media-item ${m.type}">
-            ${m.type === "video"
-              ? `<video poster="${esc(m.poster || "")}" controls playsinline preload="none">
-                  ${m.webm ? `<source src="${esc(m.webm)}" type="video/webm">` : ""}
-                  <source src="${esc(m.src)}" type="video/mp4">
-                </video>`
-              : `<button class="screen" data-src="${esc(m.src)}" data-cap="${esc(m.caption)}"><img src="${esc(m.src)}" alt="${esc(m.caption)}" loading="lazy"></button>`}
-            <figcaption class="label">${pad(k + 1)} · ${esc(m.caption)}</figcaption>
-          </figure>`).join("")}
-      </div>` : ""}
-      ${p.screens?.length ? `
-      <div class="screens">
-        ${p.screens.map((sc, k) => `
-          <button class="screen" data-src="${esc(sc.src)}" data-cap="${esc(sc.caption)}">
-            <img src="${esc(sc.src)}" alt="${esc(p.title)}: ${esc(sc.caption)}" loading="lazy">
-            <span class="label">${pad(k + 1)} · ${esc(sc.caption)}</span>
-          </button>`).join("")}
-      </div>` : ""}
     </article>`).join("");
 
   $("#denisonScene").innerHTML = SCENES.denison();

@@ -8,7 +8,8 @@ Live at **https://shizzashafqat.github.io/portfolio**
 
 - A minimal, monochrome, terminal-flavored layout; my Denison doodle colors in under your cursor
 - A lens switch (AI engineer / software engineer / product manager) that re-sorts and highlights the whole site
-- Single-line drawings that draw themselves on scroll: a New York skyline, the places I have worked, and a spirit animal for every project (owl, elephant, bee, penguins)
+- Single-line drawings that draw themselves on scroll: a New York skyline, the places I have worked
+- Each project shows real screens, photos or video, and a "no image" box until one is added
 - A sketchbook gallery (grayscale until hover) with a lightbox
 - An art page (`art.html`) with every page of every piece laid out big, caption space under each page and piece, and a full-screen reader (arrow keys and swipe)
 - Plain HTML, CSS, and JavaScript. No frameworks, no build step

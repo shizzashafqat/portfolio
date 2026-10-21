@@ -127,11 +127,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* line drawings */
 .f { fill: var(--bg); }
 /* stroke widths tuned per size so every drawing reads as ~1.5px ink */
-.animal svg .ln { stroke-width: .7; }
 .place svg .ln { stroke-width: 2.4; }
 .scene-wide svg .ln { stroke-width: 1; }
 .skyline svg .ln { stroke-width: 1.4; }
-.scene svg, .scene-wide svg, .animal svg { width: 100%; height: 100%; }
+.scene svg, .scene-wide svg { width: 100%; height: 100%; }
 .scene-wide { max-width: 640px; aspect-ratio: 400 / 140; margin-bottom: 2.5rem; }
 
 /* draw-on: every stroke uses pathLength=1, so 1 = fully hidden */
@@ -169,20 +168,62 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   padding: 3.5rem 0; border-bottom: 1px solid var(--line);
 }
 .spotlight:first-child { padding-top: 0; }
-.spotlight:nth-child(even) .animal-wrap { order: 2; }
-.animal-wrap { display: grid; gap: .8rem; }
-.animal {
-  aspect-ratio: 1; padding: 8%;
-  border: 1px solid var(--line);
+.spotlight:nth-child(even) .vis-wrap { order: 2; }
+
+/* project visual panel */
+.vis-wrap { display: grid; gap: .9rem; min-width: 0; }
+.vis {
+  position: relative; border: 1px solid var(--line);
   background:
-    radial-gradient(circle at 50% 55%, var(--hover), transparent 65%);
-  transition: background .4s;
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--hover);
 }
-.spotlight:hover .animal { background: radial-gradient(circle at 50% 55%, var(--line), transparent 70%); }
-.animal svg { transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
-.spotlight:hover .animal svg { transform: translateY(-4px) scale(1.02); }
-.animal-cap { display: flex; justify-content: space-between; gap: 1rem; }
-.animal-cap .note { text-align: right; max-width: 30ch; }
+.vis .tag {
+  position: absolute; top: .5rem; left: .5rem; z-index: 2;
+  font-size: .65rem; padding: .1rem .4rem; background: var(--bg); border: 1px solid var(--line); color: var(--muted);
+}
+.vis-cap { list-style: none; display: grid; gap: .2rem; }
+.vis-cap b { color: var(--ink); font-weight: 500; margin-right: .4rem; }
+
+/* phones: a slight fan of app screens */
+.vis.phones {
+  display: flex; justify-content: center; align-items: center;
+  padding: 2.4rem 1.2rem; aspect-ratio: 1 / 1; overflow: hidden;
+}
+.phone {
+  position: relative; flex: 0 0 auto; width: 30%;
+  margin-left: -6%; cursor: zoom-in;
+  transform: translateY(calc((var(--k) - (var(--n) - 1) / 2) * (var(--k) - (var(--n) - 1) / 2) * 6px)) rotate(calc((var(--k) - (var(--n) - 1) / 2) * 5deg));
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1), z-index 0s;
+}
+.phone:first-child { margin-left: 0; }
+.phone img {
+  width: 100%; aspect-ratio: 9 / 19.5; object-fit: cover; object-position: top;
+  border-radius: 16px; border: 1px solid var(--ink);
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .45);
+}
+.phone .tag { top: -1.6rem; left: 50%; transform: translateX(-50%); }
+.vis.phones:hover .phone { transform: translateY(0) rotate(0); }
+.phone:hover { z-index: 3; transform: translateY(-10px) scale(1.06) !important; }
+
+/* photos + video stacked */
+.vis.stack-media { display: grid; gap: 1px; background: var(--line); }
+.vis.stack-media .m { position: relative; background: var(--bg); }
+.vis.stack-media video, .vis.stack-media img { width: 100%; display: block; }
+.vis.stack-media video { aspect-ratio: 16 / 9; background: #000; }
+.vis.stack-media .image img { aspect-ratio: 16 / 10; object-fit: cover; object-position: center 35%; }
+.vis.stack-media .screen { display: block; width: 100%; cursor: zoom-in; }
+.vis.stack-media .video .tag { pointer-events: none; }
+
+/* nothing to show yet */
+.vis.empty { aspect-ratio: 4 / 3; display: grid; place-items: center; border-style: dashed; border-color: var(--muted); }
+.vis.empty svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.vis.empty path { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; fill: none; }
+.vis.empty span {
+  position: relative; font-size: .78rem; letter-spacing: .08em; color: var(--muted);
+  background: var(--hover); padding: .3rem .7rem; border: 1px solid var(--line);
+}
 .sp-body .idx { display: flex; gap: 1rem; margin-bottom: .6rem; }
 .sp-body h3 { font: 400 clamp(2.2rem, 4vw, 3rem)/1.05 var(--serif); margin-bottom: 1rem; }
 .sp-body p { margin-bottom: 1.5rem; max-width: 52ch; }
@@ -260,8 +301,7 @@ body:not([data-lens="all"]) .reveal.in[data-lens-tags]:not(.match) { opacity: .2
   .places { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .roles { grid-template-columns: 1fr; }
   .spotlight { grid-template-columns: 1fr; gap: 1.5rem; }
-  .spotlight:nth-child(even) .animal-wrap { order: 0; }
-  .animal { max-width: 360px; }
+  .spotlight:nth-child(even) .vis-wrap { order: 0; }
   .nav ul { display: none; }
 }
 @media (max-width: 560px) {
@@ -380,35 +420,3 @@ body:not([data-lens="all"]) .reveal.in[data-lens-tags]:not(.match) { opacity: .2
 }
 .inline-link { color: var(--ink); border-bottom: 1px solid var(--ink); }
 
-/* app screenshots under a project spotlight */
-.screens {
-  grid-column: 1 / -1;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.2rem;
-  margin-top: .5rem; padding-top: 2rem; border-top: 1px dashed var(--line);
-}
-.screen { text-align: left; cursor: zoom-in; display: grid; gap: .6rem; align-content: start; }
-.screen img {
-  width: 100%; aspect-ratio: 9 / 19.5; object-fit: cover; object-position: top;
-  border: 1px solid var(--line); border-radius: 18px;
-  transition: transform .35s cubic-bezier(.2, .8, .2, 1), border-color .2s;
-}
-.screen:hover img { transform: translateY(-4px); border-color: var(--ink); }
-.lightbox img { max-height: 80vh; }
-@media (max-width: 900px) {
-  .screens { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 46%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
-  .screen { scroll-snap-align: start; }
-}
-
-/* photos + video under a project spotlight */
-.media {
-  grid-column: 1 / -1;
-  display: grid; grid-template-columns: minmax(0, 1.78fr) minmax(0, 1fr); gap: 1.2rem; align-items: start;
-  margin-top: .5rem; padding-top: 2rem; border-top: 1px dashed var(--line);
-}
-.media-item { display: grid; gap: .6rem; }
-.media-item video, .media-item img { width: 100%; border: 1px solid var(--line); display: block; background: var(--hover); }
-.media-item video { aspect-ratio: 16 / 9; }
-.media-item.image img { aspect-ratio: 4 / 3; object-fit: cover; }
-.media-item .screen img { border-radius: 0; aspect-ratio: 4 / 3; object-position: center; }
-@media (max-width: 900px) { .media { grid-template-columns: 1fr; } }
-.media, .screens { order: 3; }
