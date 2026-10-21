@@ -26,6 +26,7 @@ Almost everything lives in **`assets/content.js`**:
 | App screens under a project | Put them in `assets/projects/` and add `{ src, caption }` to that project's `screens` |
 | A comic or artwork | Put it in `assets/art/` plus a ~640px copy in `assets/art/thumbs/`, then list it in `assets/art.js` |
 | A caption under a piece | Edit `caption` for that piece in `assets/art.js`, or give one page its own `{ file, caption }` |
+| Photos or a video under a project | Put them in `assets/projects/` and add `{ type: "image" or "video", src, caption }` to that project's `media` |
 | Your resume | Drop the PDF in `assets/` and set `resume` |
 
 `lens` tags (`ai`, `swe`, `pm`) decide what lights up for each role.

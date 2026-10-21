@@ -171,6 +171,19 @@ function render() {
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
         <div class="links">${p.links.length ? linkList(p.links) : `<span class="soon">// demo + images coming soon</span>`}</div>
       </div>
+      ${p.media?.length ? `
+      <div class="media">
+        ${p.media.map((m, k) => `
+          <figure class="media-item ${m.type}">
+            ${m.type === "video"
+              ? `<video poster="${esc(m.poster || "")}" controls playsinline preload="none">
+                  ${m.webm ? `<source src="${esc(m.webm)}" type="video/webm">` : ""}
+                  <source src="${esc(m.src)}" type="video/mp4">
+                </video>`
+              : `<button class="screen" data-src="${esc(m.src)}" data-cap="${esc(m.caption)}"><img src="${esc(m.src)}" alt="${esc(m.caption)}" loading="lazy"></button>`}
+            <figcaption class="label">${pad(k + 1)} · ${esc(m.caption)}</figcaption>
+          </figure>`).join("")}
+      </div>` : ""}
       ${p.screens?.length ? `
       <div class="screens">
         ${p.screens.map((sc, k) => `

@@ -110,6 +110,11 @@ window.CONTENT = {
       stack: ["Python", "ArcGIS", "Generative AI", "Digital Humanities"],
       stat: "200+ features",
       image: "",
+      // Photos and videos shown under the project. type is "video" or "image".
+      media: [
+        { type: "video", src: "assets/projects/sirkap-welcome.mp4", webm: "assets/projects/sirkap-welcome.webm", poster: "assets/projects/sirkap-welcome-poster.webp", caption: "welcome to sirkap · ai-generated flythrough of the reconstruction" },
+        { type: "image", src: "assets/projects/sirkap-research.webp", caption: "presenting the research · re-imagining sirkap" },
+      ],
       links: [{ label: "explore the reconstruction", href: "https://storymaps.arcgis.com/stories/f3ba75d75b484183b4a199fbe45e07e7" }],
     },
     {
