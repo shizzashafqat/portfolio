@@ -10,6 +10,7 @@ Live at **https://shizzashafqat.github.io/portfolio**
 - A lens switch (AI engineer / software engineer / product manager) that re-sorts and highlights the whole site
 - Single-line drawings that draw themselves on scroll: a New York skyline, the places I have worked, and a spirit animal for every project (owl, elephant, bee, penguins)
 - A sketchbook gallery (grayscale until hover) with a lightbox
+- An art page (`art.html`) with my comics grouped into series and a page-by-page reader (arrow keys and swipe)
 - Plain HTML, CSS, and JavaScript. No frameworks, no build step
 
 ## Updating the site
@@ -22,6 +23,7 @@ Almost everything lives in **`assets/content.js`**:
 | A photo | Put it in `assets/photos/`, add `{ src, caption }` to `photos` |
 | A project link | Add `{ label, href }` to that project's `links` |
 | A project screenshot | Set that project's `image` to the file path |
+| A comic or artwork | Put it in `assets/art/` plus a ~640px copy in `assets/art/thumbs/`, then list it in `assets/art.js` |
 | Your resume | Drop the PDF in `assets/` and set `resume` |
 
 `lens` tags (`ai`, `swe`, `pm`) decide what lights up for each role.
