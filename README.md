@@ -6,10 +6,10 @@ Live at **https://shizzashafqat.github.io/portfolio**
 
 ## What's inside
 
-- My Denison doodle as the hero, tilting toward your cursor
+- A minimal black-and-white layout; my Denison doodle colors in under your cursor
 - A lens switch (AI engineer / software engineer / product manager) that re-sorts and highlights the whole site
-- Draggable stickers, a marker-ink cursor trail, and hand-drawn SVG scenes of Islamabad, Seattle, Denison, and New York that "boil" like animation
-- A sketchbook gallery with a lightbox
+- Single-line drawings of Islamabad, Seattle, Denison, and New York with a slight hand-drawn tremble
+- A sketchbook gallery (grayscale until hover) with a lightbox
 - Plain HTML, CSS, and JavaScript. No frameworks, no build step
 
 ## Updating the site

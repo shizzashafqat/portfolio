@@ -10,111 +10,97 @@
   <meta property="og:image" content="assets/doodles/denison-doodle.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&family=Caveat:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-lens="all">
-  <!-- Hand-drawn "boil": a tiny wobble on every inked line -->
+  <!-- Gives the line drawings a slight hand-drawn tremble -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <filter id="wobble">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="1" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="3"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="1"/>
+      <feDisplacementMap in="SourceGraphic" scale="2"/>
     </filter>
   </svg>
 
-  <canvas id="ink" aria-hidden="true"></canvas>
-
   <nav class="nav">
-    <a href="#top" class="logo">shizza<span>.</span></a>
+    <a href="#top" class="logo">Shizza Shafqat</a>
     <ul>
-      <li><a href="#work">work</a></li>
-      <li><a href="#projects">projects</a></li>
-      <li><a href="#denison">denison</a></li>
-      <li><a href="#doodles">doodles</a></li>
-      <li><a href="#contact" class="btn-ink">say hi</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#denison">Denison</a></li>
+      <li><a href="#sketchbook">Sketchbook</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
   <main id="top">
-    <!-- HERO -->
     <header class="hero">
-      <div class="hero-art" id="heroArt">
-        <img src="assets/doodles/denison-doodle.jpg" alt="Shizza's colorful doodle of Denison's Swasey Chapel surrounded by AI, data, coffee, music and campus icons">
-      </div>
-      <div class="hero-card wobble-box">
-        <p class="hand hello">hi, i'm</p>
-        <h1 class="name"><span data-text="Shizza">Shizza</span><br><span class="name-2">Shafqat</span></h1>
-        <p class="hero-sub">CS @ Denison University · Digital Humanities · class of '27</p>
-
-        <div class="lens" role="radiogroup" aria-label="Pick a lens">
-          <span class="hand lens-label">see me as →</span>
-          <button role="radio" aria-checked="false" data-lens="ai" class="chip c-red">AI engineer</button>
-          <button role="radio" aria-checked="false" data-lens="swe" class="chip c-cyan">software engineer</button>
-          <button role="radio" aria-checked="false" data-lens="pm" class="chip c-yellow">product manager</button>
+      <div class="hero-text">
+        <p class="label">CS @ Denison University · Class of 2027</p>
+        <h1 class="name">Shizza<br><em>Shafqat</em></h1>
+        <p class="intro" id="intro"></p>
+        <div class="lens" role="radiogroup" aria-label="View as">
+          <span class="label">View as</span>
+          <button role="radio" aria-checked="true" data-lens="all">Everything</button>
+          <button role="radio" aria-checked="false" data-lens="ai">AI engineer</button>
+          <button role="radio" aria-checked="false" data-lens="swe">Software engineer</button>
+          <button role="radio" aria-checked="false" data-lens="pm">Product manager</button>
         </div>
-        <p class="intro" id="intro">I build AI, software, and products, and I draw all of it. Pick a lens above and the whole site rearranges itself around it.</p>
       </div>
-
-      <div class="stickers" id="stickers" aria-hidden="true"></div>
-      <p class="hand drag-hint">psst, drag the stickers ↗</p>
+      <figure class="hero-art" id="heroArt">
+        <img class="mono-img" src="assets/doodles/denison-doodle.jpg" alt="Shizza's doodle of Denison's Swasey Chapel surrounded by AI, data, coffee, and campus icons">
+        <img class="color-img" src="assets/doodles/denison-doodle.jpg" alt="" aria-hidden="true">
+        <figcaption class="hand">my doodle of Swasey Chapel. hover to color it in</figcaption>
+      </figure>
     </header>
 
-    <!-- MARQUEE -->
-    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
-
-    <!-- JOURNEY -->
-    <section class="section journey" id="journey">
-      <h2 class="title"><span class="hand num">01</span> the map so far</h2>
+    <section class="section" id="journey">
+      <div class="section-head"><span class="label">01</span><h2>Places</h2></div>
       <div class="places" id="places"></div>
     </section>
 
-    <!-- EXPERIENCE -->
     <section class="section" id="work">
-      <h2 class="title"><span class="hand num">02</span> where i've worked</h2>
-      <div class="timeline" id="timeline"></div>
+      <div class="section-head"><span class="label">02</span><h2>Experience</h2></div>
+      <div class="jobs" id="timeline"></div>
     </section>
 
-    <!-- PROJECTS -->
     <section class="section" id="projects">
-      <h2 class="title"><span class="hand num">03</span> things i've built</h2>
+      <div class="section-head"><span class="label">03</span><h2>Projects</h2></div>
       <div class="projects" id="projectGrid"></div>
     </section>
 
-    <!-- DENISON -->
-    <section class="section denison" id="denison">
-      <div class="denison-scene" id="denisonScene"></div>
-      <h2 class="title"><span class="hand num">04</span> on the hill</h2>
+    <section class="section" id="denison">
+      <div class="section-head"><span class="label">04</span><h2>At Denison</h2></div>
+      <div class="scene-wide" id="denisonScene"></div>
       <p class="lede" id="leadSummary"></p>
       <div class="roles" id="roles"></div>
       <div class="skills" id="skills"></div>
     </section>
 
-    <!-- DOODLES -->
-    <section class="section" id="doodles">
-      <h2 class="title"><span class="hand num">05</span> the sketchbook</h2>
-      <p class="lede">I draw the things I build and the places I love. More pages coming.</p>
+    <section class="section" id="sketchbook">
+      <div class="section-head"><span class="label">05</span><h2>Sketchbook</h2></div>
+      <p class="lede">I draw the things I build and the places I love. More pages soon.</p>
       <div class="gallery" id="gallery"></div>
       <div class="photos" id="photos"></div>
     </section>
 
-    <!-- CONTACT -->
     <section class="section contact" id="contact">
-      <div class="nyc-scene" id="nycScene"></div>
-      <h2 class="title big">let's build<br>something <span class="scribble">cool</span>.</h2>
-      <p class="lede">Open to AI, software engineering, and product roles for 2027.</p>
+      <div class="scene-wide" id="nycScene"></div>
+      <h2 class="big">Let's build something.</h2>
+      <p class="lede">Open to AI, software engineering, and product roles.</p>
       <div class="contact-links" id="contactLinks"></div>
     </section>
   </main>
 
   <footer class="footer">
-    <span class="hand">drawn &amp; coded by hand by shizza · <span id="year"></span></span>
-    <span class="mono">no frameworks were harmed</span>
+    <span>© <span id="year"></span> Shizza Fatima Shafqat</span>
+    <span>Drawn and coded by hand</span>
   </footer>
 
   <div class="lightbox" id="lightbox" hidden>
-    <button class="lb-close chip" aria-label="Close">close ✕</button>
+    <button class="lb-close" aria-label="Close">Close</button>
     <img alt="">
-    <p class="hand"></p>
+    <p></p>
   </div>
 
   <script src="assets/content.js"></script>
