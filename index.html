@@ -3,80 +3,121 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shizza Shafqat · Software Engineer</title>
-  <meta name="description" content="Shizza Fatima Shafqat: CS + Data Analytics at Denison University. Building at the intersection of AI, data, and storytelling.">
-  <meta property="og:title" content="Shizza Shafqat · Software Engineer">
-  <meta property="og:description" content="Building at the intersection of AI, data, and storytelling.">
+  <title>Shizza Shafqat · AI, SWE, PM</title>
+  <meta name="description" content="Shizza Fatima Shafqat: CS at Denison University. Building AI, software, and products, and drawing all of it.">
+  <meta property="og:title" content="Shizza Shafqat · AI, SWE, PM">
+  <meta property="og:description" content="CS at Denison. Building AI, software, and products, and drawing all of it.">
+  <meta property="og:image" content="assets/doodles/denison-doodle.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
-  <canvas id="field" aria-hidden="true"></canvas>
-  <div class="cursor" aria-hidden="true"></div>
+<body data-lens="all">
+  <!-- Hand-drawn "boil": a tiny wobble on every inked line -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="wobble">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="1" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3"/>
+    </filter>
+  </svg>
+
+  <canvas id="ink" aria-hidden="true"></canvas>
 
   <nav class="nav">
-    <a href="#top" class="logo">s<span>/</span>s</a>
+    <a href="#top" class="logo">shizza<span>.</span></a>
     <ul>
-      <li><a href="#about">about</a></li>
       <li><a href="#work">work</a></li>
-      <li><a href="#contact">contact</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#denison">denison</a></li>
+      <li><a href="#doodles">doodles</a></li>
+      <li><a href="#contact" class="btn-ink">say hi</a></li>
     </ul>
   </nav>
 
   <main id="top">
+    <!-- HERO -->
     <header class="hero">
-      <p class="kicker mono">&gt; hello, world. i am</p>
-      <h1 class="name">
-        <span class="line">Shizza</span>
-        <span class="line italic">Shafqat</span>
-      </h1>
-      <p class="tagline">
-        I build <span class="typed mono" data-words="thoughtful software.|AI that tells stories.|data you can feel.|tools for humans."></span><span class="caret">▍</span>
-      </p>
-      <p class="sub mono">CS + Data Analytics · Digital Humanities · Denison University</p>
-      <a class="scroll mono" href="#about">scroll ↓</a>
+      <div class="hero-art" id="heroArt">
+        <img src="assets/doodles/denison-doodle.jpg" alt="Shizza's colorful doodle of Denison's Swasey Chapel surrounded by AI, data, coffee, music and campus icons">
+      </div>
+      <div class="hero-card wobble-box">
+        <p class="hand hello">hi, i'm</p>
+        <h1 class="name"><span data-text="Shizza">Shizza</span><br><span class="name-2">Shafqat</span></h1>
+        <p class="hero-sub">CS @ Denison University · Digital Humanities · class of '27</p>
+
+        <div class="lens" role="radiogroup" aria-label="Pick a lens">
+          <span class="hand lens-label">see me as →</span>
+          <button role="radio" aria-checked="false" data-lens="ai" class="chip c-red">AI engineer</button>
+          <button role="radio" aria-checked="false" data-lens="swe" class="chip c-cyan">software engineer</button>
+          <button role="radio" aria-checked="false" data-lens="pm" class="chip c-yellow">product manager</button>
+        </div>
+        <p class="intro" id="intro">I build AI, software, and products, and I draw all of it. Pick a lens above and the whole site rearranges itself around it.</p>
+      </div>
+
+      <div class="stickers" id="stickers" aria-hidden="true"></div>
+      <p class="hand drag-hint">psst, drag the stickers ↗</p>
     </header>
 
-    <section id="about" class="section reveal">
-      <h2 class="section-title"><span class="mono">01</span> about</h2>
-      <div class="about-grid">
-        <p class="lede">
-          I'm a junior studying Computer Science and Data Analytics, with a minor in
-          Digital Humanities. I like projects where code meets culture: models that
-          read, data that remembers, and interfaces that feel a little like art.
-        </p>
-        <ul class="stack mono">
-          <li>Python</li><li>Java</li><li>JavaScript</li><li>Machine Learning</li>
-          <li>Data Viz</li><li>Algorithms</li><li>NLP</li><li>Research</li>
-        </ul>
-      </div>
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+
+    <!-- JOURNEY -->
+    <section class="section journey" id="journey">
+      <h2 class="title"><span class="hand num">01</span> the map so far</h2>
+      <div class="places" id="places"></div>
     </section>
 
-    <section id="work" class="section reveal">
-      <h2 class="section-title"><span class="mono">02</span> selected work</h2>
-      <div class="cards" id="cards"></div>
+    <!-- EXPERIENCE -->
+    <section class="section" id="work">
+      <h2 class="title"><span class="hand num">02</span> where i've worked</h2>
+      <div class="timeline" id="timeline"></div>
     </section>
 
-    <section id="contact" class="section reveal">
-      <h2 class="section-title"><span class="mono">03</span> contact</h2>
-      <p class="lede">Open to software engineering roles and internships. Let's build something.</p>
-      <div class="links mono">
-        <a href="https://github.com/shizzashafqat" target="_blank" rel="noopener">github ↗</a>
-        <!-- TODO: add your LinkedIn, email, and resume -->
-        <a href="#" class="todo">linkedin ↗</a>
-        <a href="#" class="todo">email ↗</a>
-        <a href="#" class="todo">resume.pdf ↗</a>
-      </div>
+    <!-- PROJECTS -->
+    <section class="section" id="projects">
+      <h2 class="title"><span class="hand num">03</span> things i've built</h2>
+      <div class="projects" id="projectGrid"></div>
+    </section>
+
+    <!-- DENISON -->
+    <section class="section denison" id="denison">
+      <div class="denison-scene" id="denisonScene"></div>
+      <h2 class="title"><span class="hand num">04</span> on the hill</h2>
+      <p class="lede" id="leadSummary"></p>
+      <div class="roles" id="roles"></div>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <!-- DOODLES -->
+    <section class="section" id="doodles">
+      <h2 class="title"><span class="hand num">05</span> the sketchbook</h2>
+      <p class="lede">I draw the things I build and the places I love. More pages coming.</p>
+      <div class="gallery" id="gallery"></div>
+      <div class="photos" id="photos"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section contact" id="contact">
+      <div class="nyc-scene" id="nycScene"></div>
+      <h2 class="title big">let's build<br>something <span class="scribble">cool</span>.</h2>
+      <p class="lede">Open to AI, software engineering, and product roles for 2027.</p>
+      <div class="contact-links" id="contactLinks"></div>
     </section>
   </main>
 
-  <footer class="footer mono">
-    <span>© <span id="year"></span> Shizza Fatima Shafqat</span>
-    <span>hand-made, no frameworks · move your mouse</span>
+  <footer class="footer">
+    <span class="hand">drawn &amp; coded by hand by shizza · <span id="year"></span></span>
+    <span class="mono">no frameworks were harmed</span>
   </footer>
 
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close chip" aria-label="Close">close ✕</button>
+    <img alt="">
+    <p class="hand"></p>
+  </div>
+
+  <script src="assets/content.js"></script>
   <script src="assets/main.js"></script>
 </body>
 </html>

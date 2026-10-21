@@ -1,14 +1,30 @@
 # Shizza Shafqat · Portfolio
 
-My personal portfolio: CS + Data Analytics and Digital Humanities at Denison University, building at the intersection of AI, data, and storytelling.
+A hand-drawn, interactive portfolio: CS at Denison University, building AI, software, and products, and drawing all of it.
 
 Live at **https://shizzashafqat.github.io/portfolio**
 
 ## What's inside
 
-- A generative flow-field canvas that reacts to your cursor
-- Hand-written HTML, CSS, and JavaScript, no frameworks or build step
-- Respects `prefers-reduced-motion`
+- My Denison doodle as the hero, tilting toward your cursor
+- A lens switch (AI engineer / software engineer / product manager) that re-sorts and highlights the whole site
+- Draggable stickers, a marker-ink cursor trail, and hand-drawn SVG scenes of Islamabad, Seattle, Denison, and New York that "boil" like animation
+- A sketchbook gallery with a lightbox
+- Plain HTML, CSS, and JavaScript. No frameworks, no build step
+
+## Updating the site
+
+Almost everything lives in **`assets/content.js`**:
+
+| To add… | Do this |
+| --- | --- |
+| A doodle | Put the image in `assets/doodles/`, add `{ src, title, note }` to `doodles` |
+| A photo | Put it in `assets/photos/`, add `{ src, caption }` to `photos` |
+| A project link | Add `{ label, href }` to that project's `links` |
+| A project screenshot | Set that project's `image` to the file path |
+| Your resume | Drop the PDF in `assets/` and set `resume` |
+
+`lens` tags (`ai`, `swe`, `pm`) decide what lights up for each role.
 
 ## Run locally
 
@@ -16,9 +32,3 @@ Live at **https://shizzashafqat.github.io/portfolio**
 python3 -m http.server 8000
 # then open http://localhost:8000
 ```
-
-## Edit
-
-- Projects: the `projects` array at the top of `assets/main.js`
-- Text and links: `index.html`
-- Colors and fonts: the `:root` variables in `assets/style.css`
