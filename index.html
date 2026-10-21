@@ -10,95 +10,93 @@
   <meta property="og:image" content="assets/doodles/denison-doodle.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&family=Caveat:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-lens="all">
-  <!-- Gives the line drawings a slight hand-drawn tremble -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <filter id="wobble">
-      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="1"/>
-      <feDisplacementMap in="SourceGraphic" scale="2"/>
-    </filter>
-  </svg>
+  <div class="grid-bg" aria-hidden="true"></div>
 
   <nav class="nav">
-    <a href="#top" class="logo">Shizza Shafqat</a>
-    <ul>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#denison">Denison</a></li>
-      <li><a href="#sketchbook">Sketchbook</a></li>
-      <li><a href="#contact">Contact</a></li>
+    <a href="#top" class="logo mono">shizza<span class="caret">_</span></a>
+    <ul class="mono">
+      <li><a href="#work">work</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#denison">denison</a></li>
+      <li><a href="#sketchbook">sketchbook</a></li>
+      <li><a href="#contact">contact</a></li>
     </ul>
+    <span class="status mono"><i></i>open to 2027 roles</span>
   </nav>
 
   <main id="top">
     <header class="hero">
       <div class="hero-text">
-        <p class="label">CS @ Denison University · Class of 2027</p>
+        <p class="label"><span class="prompt">~ $</span> whoami</p>
         <h1 class="name">Shizza<br><em>Shafqat</em></h1>
         <p class="intro" id="intro"></p>
-        <div class="lens" role="radiogroup" aria-label="View as">
-          <span class="label">View as</span>
-          <button role="radio" aria-checked="true" data-lens="all">Everything</button>
-          <button role="radio" aria-checked="false" data-lens="ai">AI engineer</button>
-          <button role="radio" aria-checked="false" data-lens="swe">Software engineer</button>
-          <button role="radio" aria-checked="false" data-lens="pm">Product manager</button>
+        <div class="lens mono" role="radiogroup" aria-label="View as">
+          <span class="label">--lens</span>
+          <button role="radio" aria-checked="true" data-lens="all">all</button>
+          <button role="radio" aria-checked="false" data-lens="ai">ai</button>
+          <button role="radio" aria-checked="false" data-lens="swe">swe</button>
+          <button role="radio" aria-checked="false" data-lens="pm">pm</button>
         </div>
       </div>
-      <figure class="hero-art" id="heroArt">
+      <figure class="hero-art frame" id="heroArt">
         <img class="mono-img" src="assets/doodles/denison-doodle.jpg" alt="Shizza's doodle of Denison's Swasey Chapel surrounded by AI, data, coffee, and campus icons">
         <img class="color-img" src="assets/doodles/denison-doodle.jpg" alt="" aria-hidden="true">
-        <figcaption class="hand">my doodle of Swasey Chapel. hover to color it in</figcaption>
+        <figcaption class="label">fig.00 · my doodle of swasey chapel · hover to color it in</figcaption>
       </figure>
     </header>
 
+    <div class="skyline draw" id="skyline" aria-hidden="true"></div>
+    <p class="coords label" aria-hidden="true"><span>40.7128° N, 74.0060° W</span><span id="clock"></span></p>
+
     <section class="section" id="journey">
-      <div class="section-head"><span class="label">01</span><h2>Places</h2></div>
+      <div class="section-head"><span class="label">01</span><h2>Places</h2><span class="label meta">/ map.json</span></div>
       <div class="places" id="places"></div>
     </section>
 
     <section class="section" id="work">
-      <div class="section-head"><span class="label">02</span><h2>Experience</h2></div>
+      <div class="section-head"><span class="label">02</span><h2>Experience</h2><span class="label meta">/ log --since=2024</span></div>
       <div class="jobs" id="timeline"></div>
     </section>
 
     <section class="section" id="projects">
-      <div class="section-head"><span class="label">03</span><h2>Projects</h2></div>
-      <div class="projects" id="projectGrid"></div>
+      <div class="section-head"><span class="label">03</span><h2>Projects</h2><span class="label meta">/ each one has a spirit animal</span></div>
+      <div class="spotlights" id="projectGrid"></div>
     </section>
 
     <section class="section" id="denison">
-      <div class="section-head"><span class="label">04</span><h2>At Denison</h2></div>
-      <div class="scene-wide" id="denisonScene"></div>
+      <div class="section-head"><span class="label">04</span><h2>At Denison</h2><span class="label meta">/ granville, oh</span></div>
+      <div class="scene-wide draw" id="denisonScene"></div>
       <p class="lede" id="leadSummary"></p>
       <div class="roles" id="roles"></div>
       <div class="skills" id="skills"></div>
     </section>
 
     <section class="section" id="sketchbook">
-      <div class="section-head"><span class="label">05</span><h2>Sketchbook</h2></div>
+      <div class="section-head"><span class="label">05</span><h2>Sketchbook</h2><span class="label meta">/ ink + pixels</span></div>
       <p class="lede">I draw the things I build and the places I love. More pages soon.</p>
       <div class="gallery" id="gallery"></div>
       <div class="photos" id="photos"></div>
     </section>
 
     <section class="section contact" id="contact">
-      <div class="scene-wide" id="nycScene"></div>
+      <div class="section-head"><span class="label">06</span><h2>Contact</h2><span class="label meta">/ ping me</span></div>
       <h2 class="big">Let's build something.</h2>
       <p class="lede">Open to AI, software engineering, and product roles.</p>
-      <div class="contact-links" id="contactLinks"></div>
+      <div class="contact-links mono" id="contactLinks"></div>
     </section>
   </main>
 
-  <footer class="footer">
-    <span>© <span id="year"></span> Shizza Fatima Shafqat</span>
-    <span>Drawn and coded by hand</span>
+  <footer class="footer mono">
+    <span>© <span id="year"></span> shizza fatima shafqat</span>
+    <span>drawn + coded by hand · no frameworks</span>
   </footer>
 
   <div class="lightbox" id="lightbox" hidden>
-    <button class="lb-close" aria-label="Close">Close</button>
+    <button class="lb-close mono" aria-label="Close">[esc] close</button>
     <img alt="">
     <p></p>
   </div>

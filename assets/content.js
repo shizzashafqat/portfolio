@@ -5,6 +5,7 @@
 //  Add a photo:   drop it in assets/photos/ and add an entry to `photos`.
 //  Add a link:    add { label, href } to a project's or job's `links`.
 //
+//  Each project's `animal` picks its line drawing from main.js (owl, elephant, bee, penguins).
 //  `lens` tags decide what lights up when a visitor picks AI, SWE, or PM.
 // ─────────────────────────────────────────────────────────────
 
@@ -81,6 +82,7 @@ window.CONTENT = {
   projects: [
     {
       title: "Hot Wheels Garage",
+      animal: "owl", animalNote: "Sharp eyes. Looks once and names what it sees.",
       kind: "iOS visual recognition app",
       color: "yellow",
       lens: ["ai", "swe"],
@@ -92,6 +94,7 @@ window.CONTENT = {
     },
     {
       title: "Re-Imagining Sirkap",
+      animal: "elephant", animalNote: "Never forgets. Holds the memory of an ancient city.",
       kind: "AI reconstruction of an archaeological site",
       color: "orange",
       lens: ["ai", "pm"],
@@ -103,6 +106,7 @@ window.CONTENT = {
     },
     {
       title: "Token Dashboard",
+      animal: "bee", animalNote: "Keeps the hive's books. Every token, counted.",
       kind: "Usage analytics for Denison AI",
       color: "red",
       lens: ["swe", "pm", "ai"],
@@ -114,6 +118,7 @@ window.CONTENT = {
     },
     {
       title: "Mentor Matcher",
+      animal: "penguins", animalNote: "Finds a match for everyone, and keeps the pair together.",
       kind: "Matching engine at HeyPossible",
       color: "cyan",
       lens: ["swe", "pm"],

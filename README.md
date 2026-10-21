@@ -6,9 +6,9 @@ Live at **https://shizzashafqat.github.io/portfolio**
 
 ## What's inside
 
-- A minimal black-and-white layout; my Denison doodle colors in under your cursor
+- A minimal, monochrome, terminal-flavored layout; my Denison doodle colors in under your cursor
 - A lens switch (AI engineer / software engineer / product manager) that re-sorts and highlights the whole site
-- Single-line drawings of Islamabad, Seattle, Denison, and New York with a slight hand-drawn tremble
+- Single-line drawings that draw themselves on scroll: a New York skyline, the places I have worked, and a spirit animal for every project (owl, elephant, bee, penguins)
 - A sketchbook gallery (grayscale until hover) with a lightbox
 - Plain HTML, CSS, and JavaScript. No frameworks, no build step
 
