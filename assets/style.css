@@ -296,70 +296,55 @@ body:not([data-lens="all"]) .reveal.in[data-lens-tags]:not(.match) { opacity: .2
 .ls-row:hover { background: var(--ink); color: var(--bg); }
 .ls-row:hover .dir { color: var(--bg); }
 
-/* one viewer per piece */
+/* every page of a piece, laid out like plates on a light table */
 .series { padding-top: 3.5rem; padding-bottom: 3rem; scroll-margin-top: 3rem; }
 .series .section-head { margin-bottom: 1.6rem; }
-.viewer { outline: none; }
+.wall { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.4rem 1.6rem; align-items: start; }
+.wall.solo { grid-template-columns: minmax(0, 760px); justify-content: center; }
+.plate.wide { grid-column: 1 / -1; }
+.plate { position: relative; }
 .vbar {
-  display: flex; gap: 1.4rem; align-items: center;
-  font-size: .74rem; color: var(--muted);
-  border: 1px solid var(--ink); border-bottom: 0; padding: .55rem .9rem;
+  display: flex; gap: 1.2rem; align-items: center;
+  font-size: .72rem; color: var(--muted);
+  border: 1px solid var(--ink); border-bottom: 0; padding: .45rem .8rem;
 }
-.vbar .path { color: var(--ink); }
-.vbar .xy { margin-left: auto; font-variant-numeric: tabular-nums; }
-.vbar .open:hover { color: var(--ink); }
-.viewer:focus-visible .vbar { background: var(--ink); color: var(--bg); }
-.viewer:focus-visible .vbar .path { color: var(--bg); }
-
-.stage {
-  position: relative;
-  height: clamp(420px, calc(100vh - 250px), 920px);
-  border: 1px solid var(--ink);
+.vbar .path { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vbar .xy { margin-left: auto; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.shot {
+  display: block; width: 100%; padding: clamp(.6rem, 1.6vw, 1.2rem);
+  border: 1px solid var(--ink); cursor: zoom-in;
   background:
     linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
     linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
     var(--bg);
 }
-.slot { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: clamp(.8rem, 2.5vw, 1.8rem); }
-.slot .art {
-  max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;
+.shot .art {
+  width: 100%; height: auto; max-height: 88vh; object-fit: contain; margin: 0 auto;
   cursor: crosshair; box-shadow: 0 0 0 1px var(--line);
+  transition: transform .4s cubic-bezier(.2, .8, .2, 1);
 }
+.shot:hover .art { transform: translateY(-3px); }
+.shot:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* corner ticks on hover, like a viewfinder locking on */
+.plate::before, .plate::after {
+  content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none;
+  border: 1px solid var(--ink); opacity: 0; transition: opacity .2s, translate .25s;
+}
+.plate::before { top: -8px; left: -8px; border-right: 0; border-bottom: 0; translate: 4px 4px; }
+.plate::after { bottom: -8px; right: -8px; border-left: 0; border-top: 0; translate: -4px -4px; }
+.plate:hover::before, .plate:hover::after { opacity: 1; translate: 0 0; }
 /* scan-in, top to bottom, like a page coming off a scanner */
 .art.wipe { clip-path: inset(0 0 100% 0); }
-.in .art.wipe.on { clip-path: inset(0 0 0 0); transition: clip-path .7s cubic-bezier(.6, .1, .2, 1); }
+.in .art.wipe { clip-path: inset(0 0 0 0); transition: clip-path .8s cubic-bezier(.6, .1, .2, 1), transform .4s cubic-bezier(.2, .8, .2, 1); }
 
-.hit {
-  position: absolute; top: 0; bottom: 0; width: 18%;
-  display: flex; align-items: center; padding: 0 1rem; color: var(--muted);
-  opacity: 0; transition: opacity .2s;
+.plate figcaption, .cap-series {
+  display: flex; gap: .8rem; align-items: baseline;
+  margin-top: .6rem; padding-top: .5rem; border-top: 1px dashed var(--line); min-height: 2rem;
 }
-.hit.prev { left: 0; justify-content: flex-start; cursor: w-resize; }
-.hit.next { right: 0; justify-content: flex-end; cursor: e-resize; }
-.hit span { border: 1px solid var(--ink); background: var(--bg); color: var(--ink); padding: .2rem .55rem; font-size: .9rem; }
-.stage:hover .hit:not(:disabled), .hit:focus-visible { opacity: 1; }
-.hit:disabled { pointer-events: none; }
-
-.strip {
-  display: flex; gap: .5rem; overflow-x: auto; padding: .8rem 0 .2rem;
-  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
-}
-.tab { flex: none; display: grid; gap: .3rem; justify-items: start; opacity: .45; transition: opacity .2s; }
-.tab img { height: 64px; width: auto; border: 1px solid var(--line); }
-.tab:hover { opacity: .8; }
-.tab.on { opacity: 1; }
-.tab.on img { border-color: var(--ink); }
-.tab.on .label { color: var(--ink); }
-
-.viewer figcaption {
-  display: grid; grid-template-columns: auto 1fr; gap: .2rem 1rem; align-items: baseline;
-  margin-top: .9rem; padding-top: .7rem; border-top: 1px dashed var(--line);
-  min-height: 2.6rem;
-}
-.viewer figcaption p { grid-column: 2; max-width: 62ch; }
-.cap-series { font: 400 1.25rem/1.35 var(--serif); }
-.cap-page { font-size: .9rem; color: var(--muted); }
-.viewer figcaption p:empty { display: none; }
+.plate figcaption .label, .cap-series .label { flex: none; }
+.plate figcaption p { font-size: .9rem; color: var(--muted); max-width: 62ch; }
+.cap-series { margin-top: 2rem; min-height: 2.4rem; }
+.cap-series span:last-child { font: 400 1.25rem/1.35 var(--serif); max-width: 62ch; }
 
 /* full-screen reader */
 .reader {
@@ -385,13 +370,9 @@ body:not([data-lens="all"]) .reveal.in[data-lens-tags]:not(.match) { opacity: .2
 @media (max-width: 720px) {
   .ls-row { grid-template-columns: 2rem 1fr; }
   .ls-row .perm, .ls-row .kind { display: none; }
+  .wall { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
   .vbar .xy { display: none; }
   .vbar .count { margin-left: auto; }
-  .stage { height: auto; aspect-ratio: 3 / 4; max-height: 80vh; }
-  .hit { opacity: 1; width: 22%; padding: 0 .4rem; }
-  .hit span { font-size: .75rem; }
-  .viewer figcaption { grid-template-columns: 1fr; }
-  .viewer figcaption p { grid-column: 1; }
   .reader { grid-template-columns: 40px 1fr 40px; }
 }
 @media (prefers-reduced-motion: reduce) {

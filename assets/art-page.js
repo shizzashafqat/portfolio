@@ -28,88 +28,47 @@ function render() {
       <span class="kind">${esc(s.kind)}</span><span class="dir"><bdi>${esc(s.title)}</bdi>/</span>
     </a>`).join("");
 
+  // Every page of every piece is on the page; click one to read full screen
   $("#series").innerHTML = ART.map((s, si) => `
-    <section class="section series reveal" id="${s.slug}">
+    <section class="section series" id="${s.slug}">
       <div class="section-head">
         <span class="label">${pad(si + 1)}</span><h2>${esc(s.title)}</h2>
         <span class="label meta">${esc(s.kind)} · ${count(s.pages.length)}</span>
       </div>
-      <figure class="viewer frame" data-s="${si}" tabindex="0" aria-label="${esc(s.title)}, use arrow keys to turn pages">
-        <div class="vbar mono">
-          <span class="path"></span>
-          <span class="xy">x —.— y —.—</span>
-          <span class="count"></span>
-          <button class="open" aria-label="Open full screen">[ full screen ]</button>
-        </div>
-        <div class="stage">
-          <div class="slot"></div>
-          ${s.pages.length > 1 ? `
-          <button class="hit prev" aria-label="Previous page"><span class="mono">←</span></button>
-          <button class="hit next" aria-label="Next page"><span class="mono">→</span></button>` : ""}
-        </div>
-        ${s.pages.length > 1 ? `
-        <div class="strip">
-          ${s.pages.map((pg, pi) => `
-            <button class="tab" data-p="${pi}" aria-label="Page ${pi + 1}">
-              <img src="${thumb(pg.file)}" alt="" loading="lazy">
-              <span class="label">${pad(pi + 1)}${pg.video ? " ▸" : ""}</span>
-            </button>`).join("")}
-        </div>` : ""}
-        <figcaption>
-          <span class="label">caption ›</span>
-          <p class="cap-series">${esc(s.caption || "")}</p>
-          <p class="cap-page"></p>
-        </figcaption>
-      </figure>
+      <div class="wall${s.pages.length === 1 ? " solo" : ""}">
+        ${s.pages.map((pg, pi) => `
+          <figure class="plate reveal" data-s="${si}" data-p="${pi}">
+            <div class="vbar mono">
+              <span class="path">${s.slug}/p${pad(pi + 1)}.${pg.video ? "mp4" : "webp"}</span>
+              <span class="xy">x —.— y —.—</span>
+              <span class="count">${pad(pi + 1)} / ${pad(s.pages.length)}</span>
+            </div>
+            <button class="shot" aria-label="Open ${esc(s.title)}, page ${pi + 1}, full screen">
+              ${media(pg, `${s.title}, page ${pi + 1}`, "art wipe")}
+            </button>
+            <figcaption><span class="label">p.${pad(pi + 1)} ›</span><p>${esc(pg.caption || "")}</p></figcaption>
+          </figure>`).join("")}
+      </div>
+      <p class="cap-series"><span class="label">caption ›</span> <span>${esc(s.caption || "")}</span></p>
     </section>`).join("");
 
-  document.querySelectorAll(".viewer").forEach((v) => go(v, 0));
+  // Landscape pages take the full row
+  document.querySelectorAll(".art").forEach((el) => {
+    const fit = () => {
+      const w = el.naturalWidth || el.videoWidth, h = el.naturalHeight || el.videoHeight;
+      if (w > h * 1.1) el.closest(".plate").classList.add("wide");
+    };
+    if (el.tagName === "VIDEO") el.addEventListener("loadedmetadata", fit, { once: true });
+    else if (el.complete) fit(); else el.addEventListener("load", fit, { once: true });
+  });
   $("#year").textContent = new Date().getFullYear();
 }
 
-// ── Inline viewer: one big page at a time ──
-const at = new WeakMap();
-function go(v, p) {
-  const s = ART[+v.dataset.s];
-  if (p < 0 || p >= s.pages.length) return;
-  at.set(v, p);
-  const pg = s.pages[p];
-  const slot = $(".slot", v);
-  slot.innerHTML = media(pg, `${s.title}, page ${p + 1}`, "art");
-  const el = slot.firstElementChild;
-  el.classList.add("wipe");
-  const done = () => requestAnimationFrame(() => el.classList.add("on"));
-  if (pg.video || el.complete) done(); else el.addEventListener("load", done, { once: true });
-
-  $(".path", v).textContent = `${s.slug}/p${pad(p + 1)}.${pg.video ? "mp4" : "webp"}`;
-  $(".count", v).textContent = `${pad(p + 1)} / ${pad(s.pages.length)}`;
-  $(".cap-page", v).textContent = pg.caption || "";
-  v.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", +t.dataset.p === p));
-  const prev = $(".prev", v), next = $(".next", v);
-  if (prev) prev.disabled = p === 0;
-  if (next) next.disabled = p === s.pages.length - 1;
-  // Warm the next page
-  const n = s.pages[p + 1];
-  if (n && !n.video) new Image().src = full(n.file);
-}
-
-function setupViewers() {
+function setupPlates() {
   const root = $("#series");
   root.addEventListener("click", (e) => {
-    const v = e.target.closest(".viewer");
-    if (!v) return;
-    const p = at.get(v);
-    if (e.target.closest(".prev")) go(v, p - 1);
-    else if (e.target.closest(".next")) go(v, p + 1);
-    else if (e.target.closest(".tab")) go(v, +e.target.closest(".tab").dataset.p);
-    else if (e.target.closest(".open, .art")) openReader(+v.dataset.s, p);
-  });
-  root.addEventListener("keydown", (e) => {
-    const v = e.target.closest(".viewer");
-    if (!v || e.target !== v) return;
-    if (e.key === "ArrowRight") { go(v, at.get(v) + 1); e.preventDefault(); }
-    if (e.key === "ArrowLeft") { go(v, at.get(v) - 1); e.preventDefault(); }
-    if (e.key === "Enter") openReader(+v.dataset.s, at.get(v));
+    const p = e.target.closest(".plate");
+    if (p && e.target.closest(".shot")) openReader(+p.dataset.s, +p.dataset.p);
   });
   // Cursor readout, like a measuring tool
   root.addEventListener("pointermove", (e) => {
@@ -117,12 +76,11 @@ function setupViewers() {
     if (!el) return;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-    $(".xy", el.closest(".viewer")).textContent = `x ${x.toFixed(2)} y ${y.toFixed(2)}`;
+    $(".xy", el.closest(".plate")).textContent = `x ${x.toFixed(2)} y ${y.toFixed(2)}`;
   });
   root.addEventListener("pointerout", (e) => {
-    if (e.target.closest?.(".art")) $(".xy", e.target.closest(".viewer")).textContent = "x —.— y —.—";
+    if (e.target.closest?.(".art")) $(".xy", e.target.closest(".plate")).textContent = "x —.— y —.—";
   });
-  swipe(root, ".stage", (el, d) => { const v = el.closest(".viewer"); go(v, at.get(v) + d); });
 }
 
 function swipe(el, sel, fn) {
@@ -166,10 +124,8 @@ function setupReader() {
     r.hidden = true;
     $("#rMedia").innerHTML = "";
     document.body.style.overflow = "";
-    // keep the inline viewer on the page you stopped at
-    const v = document.querySelector(`.viewer[data-s="${cur.s}"]`);
-    go(v, cur.p);
-    v.focus({ preventScroll: true });
+    // land back on the page you stopped at
+    document.querySelector(`.plate[data-s="${cur.s}"][data-p="${cur.p}"] .shot`)?.focus({ preventScroll: true });
   };
   $("#rPrev").addEventListener("click", () => step(-1));
   $("#rNext").addEventListener("click", () => step(1));
@@ -192,7 +148,7 @@ function setupScrollReveal() {
 }
 
 render();
-setupViewers();
+setupPlates();
 setupReader();
 setupScrollReveal();
 // The sections are built here, so jump to a #piece link once they exist
