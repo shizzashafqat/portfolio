@@ -220,7 +220,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .photos figure:hover img { filter: none; }
 .photos figcaption { margin-top: .5rem; }
 
-.lightbox { position: fixed; inset: 0; z-index: 60; background: color-mix(in srgb, var(--bg) 96%, transparent); display: grid; place-items: center; align-content: center; gap: 1rem; padding: 2rem; }
+.lightbox { position: fixed; inset: 0; z-index: 60; background: var(--bg); display: grid; place-items: center; align-content: center; gap: 1rem; padding: 2rem; }
 .lightbox[hidden] { display: none; }
 .lightbox img { max-height: 80vh; }
 .lightbox p { color: var(--muted); max-width: 60ch; text-align: center; }
@@ -321,3 +321,22 @@ body:not([data-lens="all"]) .reveal.in[data-lens-tags]:not(.match) { opacity: .2
   .pages { grid-auto-columns: 70%; }
 }
 .inline-link { color: var(--ink); border-bottom: 1px solid var(--ink); }
+
+/* app screenshots under a project spotlight */
+.screens {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.2rem;
+  margin-top: .5rem; padding-top: 2rem; border-top: 1px dashed var(--line);
+}
+.screen { text-align: left; cursor: zoom-in; display: grid; gap: .6rem; align-content: start; }
+.screen img {
+  width: 100%; aspect-ratio: 9 / 19.5; object-fit: cover; object-position: top;
+  border: 1px solid var(--line); border-radius: 18px;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), border-color .2s;
+}
+.screen:hover img { transform: translateY(-4px); border-color: var(--ink); }
+.lightbox img { max-height: 80vh; }
+@media (max-width: 900px) {
+  .screens { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 46%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
+  .screen { scroll-snap-align: start; }
+}

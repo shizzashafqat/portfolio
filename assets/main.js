@@ -171,6 +171,14 @@ function render() {
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
         <div class="links">${p.links.length ? linkList(p.links) : `<span class="soon">// demo + images coming soon</span>`}</div>
       </div>
+      ${p.screens?.length ? `
+      <div class="screens">
+        ${p.screens.map((sc, k) => `
+          <button class="screen" data-src="${esc(sc.src)}" data-cap="${esc(sc.caption)}">
+            <img src="${esc(sc.src)}" alt="${esc(p.title)}: ${esc(sc.caption)}" loading="lazy">
+            <span class="label">${pad(k + 1)} · ${esc(sc.caption)}</span>
+          </button>`).join("")}
+      </div>` : ""}
     </article>`).join("");
 
   $("#denisonScene").innerHTML = SCENES.denison();
@@ -251,13 +259,20 @@ function setupColorReveal() {
 function setupLightbox() {
   const lb = $("#lightbox");
   const close = () => (lb.hidden = true);
+  const open = (src, alt, text) => {
+    $("img", lb).src = src; $("img", lb).alt = alt;
+    $("p", lb).textContent = text;
+    lb.hidden = false;
+  };
   $("#gallery").addEventListener("click", (e) => {
     const card = e.target.closest(".doodle[data-i]");
     if (!card) return;
     const d = C.doodles[card.dataset.i];
-    $("img", lb).src = d.src; $("img", lb).alt = d.title;
-    $("p", lb).textContent = `${d.title}. ${d.note}`;
-    lb.hidden = false;
+    open(d.src, d.title, `${d.title}. ${d.note}`);
+  });
+  $("#projectGrid").addEventListener("click", (e) => {
+    const sc = e.target.closest(".screen");
+    if (sc) open(sc.dataset.src, sc.dataset.cap, sc.dataset.cap);
   });
   lb.addEventListener("click", (e) => { if (e.target === lb || e.target.closest(".lb-close")) close(); });
   addEventListener("keydown", (e) => e.key === "Escape" && close());

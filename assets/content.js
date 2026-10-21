@@ -4,6 +4,7 @@
 //  Add a doodle:  drop the image in assets/doodles/ and add an entry to `doodles`.
 //  Add a photo:   drop it in assets/photos/ and add an entry to `photos`.
 //  Add a link:    add { label, href } to a project's or job's `links`.
+//  App screens:   add { src, caption } to a project's `screens` (files in assets/projects/).
 //
 //  Each project's `animal` picks its line drawing from main.js (owl, elephant, bee, penguins).
 //  `lens` tags decide what lights up when a visitor picks AI, SWE, or PM.
@@ -90,6 +91,13 @@ window.CONTENT = {
       stack: ["Swift", "SwiftUI", "Vision AI", "Eval sets"],
       stat: "72% → 91%",
       image: "",
+      // App screenshots shown under the project, in order. Add { src, caption } to show more.
+      screens: [
+        { src: "assets/projects/hotwheels-1-validate.webp", caption: "validate · checks it's really a Hot Wheels car" },
+        { src: "assets/projects/hotwheels-2-result.webp", caption: "recognize · casting, year, variation + fun facts" },
+        { src: "assets/projects/hotwheels-3-confidence.webp", caption: "explain · how the confidence score works" },
+        { src: "assets/projects/hotwheels-4-collection.webp", caption: "collect · saved car with AI-generated art" },
+      ],
       links: [{ label: "code", href: "https://github.com/shizzashafqat/Hotwheel-Reader-Project" }],
     },
     {

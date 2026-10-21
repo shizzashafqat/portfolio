@@ -23,6 +23,7 @@ Almost everything lives in **`assets/content.js`**:
 | A photo | Put it in `assets/photos/`, add `{ src, caption }` to `photos` |
 | A project link | Add `{ label, href }` to that project's `links` |
 | A project screenshot | Set that project's `image` to the file path |
+| App screens under a project | Put them in `assets/projects/` and add `{ src, caption }` to that project's `screens` |
 | A comic or artwork | Put it in `assets/art/` plus a ~640px copy in `assets/art/thumbs/`, then list it in `assets/art.js` |
 | Your resume | Drop the PDF in `assets/` and set `resume` |
 
