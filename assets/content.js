@@ -102,7 +102,7 @@ window.CONTENT = {
       stack: ["Python", "ArcGIS", "Generative AI", "Digital Humanities"],
       stat: "200+ features",
       image: "",
-      links: [], // TODO: add the reconstruction link, e.g. { label: "explore", href: "https://..." }
+      links: [{ label: "explore the reconstruction", href: "https://storymaps.arcgis.com/stories/f3ba75d75b484183b4a199fbe45e07e7" }],
     },
     {
       title: "Token Dashboard",
