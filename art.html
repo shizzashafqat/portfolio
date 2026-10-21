@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Art · Shizza Shafqat</title>
-  <meta name="description" content="Comics and drawings by Shizza Fatima Shafqat.">
+  <meta name="description" content="Comics, drawings, and design by Shizza Fatima Shafqat.">
   <meta property="og:title" content="Art · Shizza Shafqat">
   <meta property="og:image" content="assets/art/thumbs/shaadi-1.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,10 +28,11 @@
 
   <main>
     <header class="section art-hero">
-      <p class="label"><span class="prompt">~ $</span> ls ./art</p>
+      <p class="label"><span class="prompt">~ $</span> cd ./art</p>
       <h1 class="name">Art<br><em>&amp; comics</em></h1>
-      <p class="lede">Ink and marker comics about family, home, and the places in between. Pick a piece to read it page by page.</p>
-      <div class="art-index mono" id="artIndex"></div>
+      <p class="lede">Ink and marker comics about family, home, and the places in between. Each piece opens big below; flip pages with the arrows, your keys, or a swipe.</p>
+      <p class="label ls-cmd"><span class="prompt">~/art $</span> ls -l</p>
+      <nav class="art-index mono" id="artIndex" aria-label="Pieces"></nav>
     </header>
 
     <div id="series"></div>
@@ -49,8 +50,9 @@
       <button id="rClose">[esc] close</button>
     </div>
     <button class="reader-nav prev mono" id="rPrev" aria-label="Previous page">←</button>
-    <img id="rImg" alt="">
+    <div id="rMedia"></div>
     <button class="reader-nav next mono" id="rNext" aria-label="Next page">→</button>
+    <p class="reader-cap" id="rCap"></p>
   </div>
 
   <script src="assets/art.js"></script>
