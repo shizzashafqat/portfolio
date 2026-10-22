@@ -21,7 +21,7 @@ window.CONTENT = {
   // The "about" block at the top of the page
   about: {
     year: "senior · class of 2027",
-    study: "computer science (b.s.) + digital humanities",
+    study: "computer science (b.s.) · minor in digital humanities",
     school: "denison university · granville, oh",
     gpa: "3.65 · dean's list",
     courses: ["Data Structures", "Algorithm Design", "Computer Systems", "Object-Oriented Programming", "Analyzing Linguistic Data"],
