@@ -5,8 +5,7 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 const lensAttr = (tags) => `data-lens-tags="${(tags || []).join(" ")}"`;
 const linkList = (links) => (links || []).map((l) => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("");
 const pad = (n) => String(n).padStart(2, "0");
-
-const DEFAULT_INTRO = "I build AI, software, and products, and I draw all of it. Set a lens below and the page refocuses on that role.";
+const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 // ── Line drawings ──
 // Every stroke has pathLength=1 so CSS can "draw" it in when it scrolls into view.
@@ -27,32 +26,6 @@ const SCENES = {
     <path ${L} d="M166 88 V118 M182 88 V118 M200 88 V118 M218 88 V118 M234 88 V118"/>
     <circle ${L} cx="72" cy="100" r="13"/><path ${L} d="M72 113 V124"/>
     <circle ${L} cx="320" cy="98" r="15"/><path ${L} d="M320 113 V122"/>`),
-  nyc: (vb = "0 0 400 140") => svg(vb, `
-    <path ${L} d="M0 138 H400"/>
-    <rect ${L} x="24" y="82" width="38" height="56"/>
-    <rect ${L} x="66" y="62" width="32" height="76"/>
-    <path ${L} d="M110 138 V60 H118 V42 H124 V26 H128 V8 H130 V26 H134 V42 H140 V60 H148 V138"/>
-    <rect ${L} x="158" y="74" width="36" height="64"/>
-    <path ${L} d="M206 138 V56 Q206 32 220 24 Q234 32 234 56 V138 M212 48 Q220 38 228 48 M210 58 Q220 46 230 58 M220 24 V6"/>
-    <rect ${L} x="246" y="88" width="42" height="50"/>
-    <rect ${L} x="294" y="50" width="28" height="88"/>
-    <rect ${L} x="328" y="94" width="52" height="44"/>
-    <path ${L} d="M74 74 h6 M86 74 h6 M74 90 h6 M86 106 h6 M302 64 v6 M312 80 v6 M302 96 v6"/>`),
-  seattle: () => svg("0 0 400 200", `
-    <path ${L} d="M210 196 L290 92 L318 120 L338 104 L410 196"/>
-    <path ${L} d="M276 110 L290 92 L304 108"/>
-    <path ${L} d="M150 196 L162 96 M190 196 L178 96"/>
-    <ellipse ${F} cx="170" cy="92" rx="34" ry="8"/>
-    <path ${L} d="M148 88 Q170 76 192 88 M170 80 V52"/>
-    <rect ${L} x="40" y="150" width="30" height="46"/>
-    <rect ${L} x="76" y="132" width="24" height="64"/>
-    <path ${L} d="M0 196 H400"/>`),
-  islamabad: () => svg("0 0 400 200", `
-    <path ${L} d="M0 150 Q60 96 130 124 T260 108 T400 126"/>
-    <path ${F} d="M150 184 L200 116 L250 184Z"/>
-    <path ${L} d="M200 116 V184"/>
-    <path ${L} d="M132 184 V104 L135 90 L138 104 V184 M262 184 V104 L265 90 L268 104 V184"/>
-    <path ${L} d="M0 184 H400"/>`),
 };
 
 // A long New York skyline for the top of the page: landmarks plus seeded filler towers
@@ -121,15 +94,14 @@ function visual(p) {
 }
 
 function render() {
-  $("#intro").textContent = DEFAULT_INTRO;
+  const A = C.about;
+  $("#about").innerHTML = [
+    ["year", A.year], ["studying", A.study], ["school", A.school], ["gpa", A.gpa],
+    ["courses", A.courses.join(" · ")],
+  ].map(([k, v]) => `<div><dt>${k}:</dt><dd>${esc(v)}</dd></div>`).join("");
+  $("#roleButtons").innerHTML = C.roles.map((r) => `
+    <button role="radio" aria-checked="false" data-lens="${r.lens}">${esc(r.label)}</button>`).join("");
   $("#skyline").innerHTML = skyline();
-
-  $("#places").innerHTML = C.places.map((p, i) => `
-    <article class="place reveal">
-      <div class="scene draw">${(SCENES[p.scene] || SCENES.nyc)("0 -60 400 200")}</div>
-      <span class="label">${pad(i + 1)} / ${pad(C.places.length)}</span>
-      <h3>${esc(p.city)}</h3><p>${esc(p.note)}</p>
-    </article>`).join("");
 
   $("#timeline").innerHTML = C.experience.map((j) => `
     <article class="job reveal" ${lensAttr(j.lens)}>
@@ -140,18 +112,22 @@ function render() {
       <div>
         <div class="org">${esc(j.org)}</div>
         <div class="jobrole">${esc(j.role)}</div>
-        <ul>${j.bullets.map((b) => `<li ${lensAttr(b.lens)}>${emphasize(esc(b.text))}</li>`).join("")}</ul>
+        <p class="summary">${emphasize(esc(j.summary))}</p>
+        <div class="impact">${j.impact.map((x) => `<span>${emphasize(esc(x))}</span>`).join("")}</div>
+        <details>
+          <summary class="label">details</summary>
+          <ul>${j.bullets.map((b) => `<li ${lensAttr(b.lens)}>${emphasize(esc(b.text))}</li>`).join("")}</ul>
+        </details>
         ${j.links?.length ? `<div class="links">${linkList(j.links)}</div>` : ""}
       </div>
     </article>`).join("");
 
   $("#projectGrid").innerHTML = C.projects.map((p, i) => `
-    <article class="spotlight reveal" ${lensAttr(p.lens)}>
+    <article class="spotlight reveal" id="p-${slug(p.title)}" ${lensAttr(p.lens)}>
       <div class="vis-wrap">${visual(p)}</div>
       <div class="sp-body">
         <div class="idx label"><span>${pad(i + 1)} / ${pad(C.projects.length)}</span><span>${esc(p.kind)}</span></div>
         <h3>${esc(p.title)}</h3>
-        ${p.image ? `<img class="shot" src="${esc(p.image)}" alt="${esc(p.title)} screenshot" loading="lazy">` : ""}
         <p>${emphasize(esc(p.blurb))}</p>
         ${p.stat ? `<div class="metric"><span class="label">key metric</span><b>${esc(p.stat)}</b></div>` : ""}
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
@@ -166,14 +142,6 @@ function render() {
   const sk = C.skills;
   $("#skills").innerHTML = [["languages", sk.languages], ["frameworks", sk.frameworks], ["tools", sk.tools]]
     .map(([label, items]) => `<div class="row"><span class="label">${label}:</span><span class="items">[${items.map((i) => `"${esc(i)}"`).join(", ")}]</span></div>`).join("");
-
-  $("#gallery").innerHTML = C.doodles.map((d, i) => `
-    <button class="doodle reveal" data-i="${i}">
-      <img src="${esc(d.src)}" alt="${esc(d.title)}" loading="lazy">
-      <h3>${esc(d.title)}</h3><p>${esc(d.note)}</p>
-    </button>`).join("") + `<div class="doodle blank reveal"><div class="ph"><span class="label">// next page, in progress</span></div></div>`;
-  $("#photos").innerHTML = C.photos.map((p) => `
-    <figure class="reveal"><img src="${esc(p.src)}" alt="${esc(p.caption)}" loading="lazy"><figcaption class="label">${esc(p.caption)}</figcaption></figure>`).join("");
 
   const links = [
     { label: "email", href: `mailto:${C.email}` },
@@ -191,15 +159,15 @@ function emphasize(html) {
   return html.replace(/(\d[\d,.]*(?:[–-]\d+)?(?:%|M\+|K\+|\+)?)(?=[\s,.)]|$)/g, '<span class="num">$1</span>');
 }
 
-// ── Lens: AI / SWE / PM ──
+// ── Roles: pick one to see the projects for it ──
 const LISTS = ["#timeline", "#projectGrid", "#roles"];
 function setupLens() {
-  const buttons = document.querySelectorAll(".lens button");
+  const box = $("#roleButtons");
+  const buttons = box.querySelectorAll("button");
   LISTS.forEach((sel) => [...$(sel).children].forEach((el, i) => (el._order = i)));
-  buttons.forEach((btn) => btn.addEventListener("click", () => {
-    const lens = btn.dataset.lens;
+  const apply = (lens) => {
     document.body.dataset.lens = lens;
-    buttons.forEach((b) => b.setAttribute("aria-checked", String(b === btn)));
+    buttons.forEach((b) => b.setAttribute("aria-checked", String(b.dataset.lens === lens)));
     document.querySelectorAll("[data-lens-tags]").forEach((el) => {
       el.classList.toggle("match", lens !== "all" && el.dataset.lensTags.split(" ").includes(lens));
     });
@@ -210,10 +178,14 @@ function setupLens() {
         .sort((a, b) => (b.classList.contains("match") - a.classList.contains("match")) || (a._order - b._order))
         .forEach((el) => parent.appendChild(el));
     });
-    const intro = $("#intro");
-    intro.style.opacity = 0;
-    setTimeout(() => { intro.textContent = lens === "all" ? DEFAULT_INTRO : C.intro[lens]; intro.style.opacity = 1; }, 200);
-  }));
+    const role = C.roles.find((r) => r.lens === lens);
+    const projects = role ? C.projects.filter((p) => p.lens.includes(lens)) : [];
+    $("#rolePanel").innerHTML = role ? `
+      <p>${esc(role.intro)}</p>
+      <ol>${projects.map((p) => `<li><a href="#p-${slug(p.title)}"><span class="label">${esc(p.kind)}</span><b>${esc(p.title)}</b><i aria-hidden="true">→</i></a></li>`).join("")}</ol>` : "";
+  };
+  buttons.forEach((btn) => btn.addEventListener("click", () =>
+    apply(btn.getAttribute("aria-checked") === "true" ? "all" : btn.dataset.lens)));
 }
 
 // ── Hero: the grayscale doodle colors in under the cursor ──
@@ -242,12 +214,6 @@ function setupLightbox() {
     $("p", lb).textContent = text;
     lb.hidden = false;
   };
-  $("#gallery").addEventListener("click", (e) => {
-    const card = e.target.closest(".doodle[data-i]");
-    if (!card) return;
-    const d = C.doodles[card.dataset.i];
-    open(d.src, d.title, `${d.title}. ${d.note}`);
-  });
   $("#projectGrid").addEventListener("click", (e) => {
     const sc = e.target.closest(".screen");
     if (sc) open(sc.dataset.src, sc.dataset.cap, sc.dataset.cap);
