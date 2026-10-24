@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- v2 lives in /v2/ but shares content and images in /assets/ with the main site -->
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Art · Shizza Shafqat</title>
+  <meta name="description" content="Comics, drawings, and design by Shizza Fatima Shafqat.">
+  <meta property="og:title" content="Art · Shizza Shafqat">
+  <meta property="og:image" content="assets/art/thumbs/shaadi-1.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="v2/style.css">
+</head>
+<body class="art-page">
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <nav class="nav">
+    <a href="v2/index.html" class="logo mono">shizza<span class="caret">_</span></a>
+    <ul class="mono">
+      <li><a href="v2/index.html#work">work</a></li>
+      <li><a href="v2/index.html#projects">projects</a></li>
+      <li><a href="v2/art.html" aria-current="page">art</a></li>
+      <li><a href="v2/index.html#contact">contact</a></li>
+    </ul>
+    <span class="status mono"><i></i>open to 2027 roles</span>
+  </nav>
+
+  <main>
+    <header class="section art-hero">
+      <p class="label"><span class="prompt">~ $</span> cd ./art</p>
+      <h1 class="name">Art<br><em>&amp; comics</em></h1>
+      <p class="lede">Ink and marker comics about family, home, and the places in between. Every page is laid out below. Tap any page to read it full screen, then flip with arrows, keys, or a swipe.</p>
+      <p class="label ls-cmd"><span class="prompt">~/art $</span> ls -l</p>
+      <nav class="art-index mono" id="artIndex" aria-label="Pieces"></nav>
+    </header>
+
+    <div id="series"></div>
+  </main>
+
+  <footer class="footer mono">
+    <span>© <span id="year"></span> shizza fatima shafqat</span>
+    <a href="v2/index.html">← back to portfolio</a>
+  </footer>
+
+  <div class="reader" id="reader" hidden role="dialog" aria-modal="true" aria-label="Comic reader">
+    <div class="reader-top mono">
+      <span id="rTitle"></span>
+      <span id="rCount"></span>
+      <button id="rClose">[esc] close</button>
+    </div>
+    <button class="reader-nav prev mono" id="rPrev" aria-label="Previous page">←</button>
+    <div id="rMedia"></div>
+    <button class="reader-nav next mono" id="rNext" aria-label="Next page">→</button>
+    <p class="reader-cap" id="rCap"></p>
+  </div>
+
+  <script src="assets/art.js"></script>
+  <script src="v2/art-page.js"></script>
+</body>
+</html>

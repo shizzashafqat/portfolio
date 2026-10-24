@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- v2 lives in /v2/ but shares content and images in /assets/ with the main site -->
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shizza Shafqat · Data, SWE, PM</title>
+  <meta name="description" content="Shizza Fatima Shafqat: CS at Denison University. Building AI, software, and products, and drawing all of it.">
+  <meta property="og:title" content="Shizza Shafqat · Data, SWE, PM">
+  <meta property="og:description" content="CS at Denison. Building AI, software, and products, and drawing all of it.">
+  <meta property="og:image" content="assets/doodles/denison-doodle.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="v2/style.css">
+</head>
+<body data-lens="all">
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <nav class="nav">
+    <a href="v2/index.html#top" class="logo mono">shizza<span class="caret">_</span></a>
+    <ul class="mono">
+      <li><a href="v2/index.html#work">work</a></li>
+      <li><a href="v2/index.html#projects">projects</a></li>
+      <li><a href="v2/index.html#denison">denison</a></li>
+      <li><a href="v2/art.html">art</a></li>
+      <li><a href="v2/index.html#contact">contact</a></li>
+    </ul>
+    <span class="status mono">open to 2027 roles</span>
+  </nav>
+
+  <main id="top">
+    <header class="hero">
+      <div class="hero-text">
+        <p class="label"><span class="prompt">~ $</span> cat about.txt</p>
+        <h1 class="name">Shizza<br><em>Shafqat</em></h1>
+        <dl class="about" id="about"></dl>
+        <div class="pick">
+          <p class="label">interested in <span class="hint">· click a role to see my projects</span></p>
+          <div class="lens" role="radiogroup" aria-label="Show projects for a role" id="roleButtons"></div>
+          <div class="role-panel" id="rolePanel" aria-live="polite"></div>
+        </div>
+      </div>
+      <figure class="hero-art frame" id="heroArt">
+        <img class="mono-img" src="assets/doodles/denison-doodle.jpg" alt="Shizza's doodle of Denison's Swasey Chapel surrounded by AI, data, coffee, and campus icons">
+        <img class="color-img" src="assets/doodles/denison-doodle.jpg" alt="" aria-hidden="true">
+        <figcaption class="label">fig.00 · my doodle of swasey chapel · hover to color it in</figcaption>
+      </figure>
+    </header>
+
+    <div class="skyline draw" id="skyline" aria-hidden="true"></div>
+    <p class="coords label" aria-hidden="true"><span>40.7128° N, 74.0060° W</span><span id="clock"></span></p>
+
+    <section class="section" id="work">
+      <div class="section-head"><span class="label">01</span><h2>Work</h2><span class="label meta">/ what I built, and what changed</span></div>
+      <div class="jobs" id="timeline"></div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-head"><span class="label">02</span><h2>Projects</h2><span class="label meta">/ screens, photos, demos</span></div>
+      <div class="spotlights" id="projectGrid"></div>
+    </section>
+
+    <section class="section" id="denison">
+      <div class="section-head"><span class="label">03</span><h2>At Denison</h2><span class="label meta">/ granville, oh</span></div>
+      <div class="scene-wide draw" id="denisonScene"></div>
+      <p class="lede" id="leadSummary"></p>
+      <div class="roles" id="roles"></div>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="section-head"><span class="label">04</span><h2>Contact</h2><span class="label meta">/ ping me</span></div>
+      <h2 class="big">Let's build something.</h2>
+      <p class="lede">Open to data science, software engineering, and product roles.</p>
+      <div class="contact-links mono" id="contactLinks"></div>
+    </section>
+  </main>
+
+  <footer class="footer mono">
+    <span>© <span id="year"></span> shizza fatima shafqat</span>
+    <span>drawn + coded by hand · no frameworks</span>
+  </footer>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close mono" aria-label="Close">[esc] close</button>
+    <img alt="">
+    <p></p>
+  </div>
+
+  <script src="assets/content.js"></script>
+  <script src="v2/main.js"></script>
+</body>
+</html>
