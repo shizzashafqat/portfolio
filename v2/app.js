@@ -94,68 +94,73 @@ function Head({ title, children }) {
 
 // ── 01 · home ──
 
-// Types like a person: a playful typo, a wipe, self-corrections, then a loop of who I am
-const IDENTITIES = [
-  "an aspiring software engineer.",
-  "an aspiring data scientist.",
-  "an aspiring product manager.",
-  "a digital artist & builder.",
-  "a cs student at denison.",
+// Types the intro one line at a time, like terminal output. Line 2 types
+// "amazing", thinks better of it, and corrects itself to "aspiring".
+const sk = C.skills;
+const INTRO = [
+  "shizza is a senior computer science major at denison university, graduating may 2027.",
+  "shizza is an aspiring software engineer, product manager and data scientist.",
+  "shizza has experience at startups and on institution-level denison projects in ai and automation.",
+  "shizza is the president of women in math, data analytics & cs at denison.",
+  `shizza has skills across ${[...sk.languages, ...sk.frameworks].join(", ").toLowerCase().replace(/, ([^,]*)$/, " and $1")}.`,
 ];
-const FINAL = "shizza is a senior cs student at denison, graduating may 2027.";
+const SLIP = { line: 1, at: "shizza is an ", typo: "amazing" };
 
 function useTypewriter() {
-  const [text, setText] = useState(reduceMotion ? FINAL : "");
+  const [lines, setLines] = useState(reduceMotion ? INTRO : [""]);
   const [typing, setTyping] = useState(false);
   useEffect(() => {
     if (reduceMotion) return;
-    let alive = true, cur = "";
+    let alive = true;
+    const done = [];
+    let cur = "";
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    const set = (t) => { cur = t; if (alive) setText(t); };
-    const key = (ch) => 45 + Math.random() * 75 + (ch === " " ? 40 : 0) + (/[.,]/.test(ch) ? 160 : 0);
-    const type = async (s) => {
+    const set = (t) => { cur = t; if (alive) setLines([...done, t]); };
+    const key = (ch) => 14 + Math.random() * 30 + (/[.,]/.test(ch) ? 120 : 0);
+    const type = async (str) => {
       setTyping(true);
-      for (const ch of s) { if (!alive) return; set(cur + ch); await sleep(key(ch)); }
+      for (const ch of str) { if (!alive) return; set(cur + ch); await sleep(key(ch)); }
       setTyping(false);
     };
-    const back = async (n, ms = 30) => {
+    const back = async (n) => {
       setTyping(true);
-      for (let i = 0; i < n; i++) { if (!alive) return; set(cur.slice(0, -1)); await sleep(ms); }
+      for (let i = 0; i < n; i++) { if (!alive) return; set(cur.slice(0, -1)); await sleep(70); }
       setTyping(false);
     };
-    const backTo = (prefix) => back(cur.length - prefix.length, 22);
     (async () => {
-      await sleep(700);
-      await type("welcme to shizza's website...");
-      await sleep(1100); await back(cur.length, 16); await sleep(500);
-      await type("shizza is a senoor");
-      await sleep(450); await back(3, 90); await type("ior cs student at denison, fradsu");
-      await sleep(420); await back(6, 80); await type("graduating may 2027.");
-      await sleep(2400); await backTo("shizza is a "); await sleep(300);
-      await type("cs student."); await sleep(1600);
-      for (let i = 0; alive; i = (i + 1) % IDENTITIES.length) {
-        await backTo("shizza is "); await sleep(260);
-        await type(IDENTITIES[i]); await sleep(2000);
+      await sleep(500);
+      for (let i = 0; i < INTRO.length && alive; i++) {
+        set("");
+        if (i === SLIP.line) {
+          await type(SLIP.at + SLIP.typo); await sleep(700);
+          await back(SLIP.typo.length); await sleep(250);
+          await type(INTRO[i].slice(SLIP.at.length));
+        } else {
+          await type(INTRO[i]);
+        }
+        done.push(INTRO[i]);
+        await sleep(350);
       }
     })();
     return () => { alive = false; };
   }, []);
-  return [text, typing];
+  return [lines, typing];
 }
 
+// The full text sits invisibly underneath so the block never changes height while typing
 function Typewriter() {
-  const [text, typing] = useTypewriter();
-  const lead = "shizza is ";
-  const split = text.startsWith(lead);
+  const [lines, typing] = useTypewriter();
+  const block = (ls, caret) => ls.map((t, i) => html`
+    <p key=${i} className="flex gap-[1ch]">
+      <span className="shrink-0 text-accent">${">"}</span>
+      <span>${t}${caret && i === ls.length - 1 ? html`<span className=${"ml-1 inline-block h-[0.95em] w-[0.5em] translate-y-[0.12em] bg-accent " + (typing ? "" : "caret-blink")}></span>` : null}</span>
+    </p>`);
   return html`
-    <p className="mt-3 min-h-[3.9em] text-[1.65rem] font-medium leading-[1.3] sm:text-4xl xl:text-5xl" >
-      <span className="sr-only">${FINAL} Aspiring software engineer, data scientist and product manager, and a digital artist.</span>
-      <span aria-hidden="true">
-        <span className="text-accent">${"> "}</span>
-        ${split ? html`${lead}<span className="text-accent">${text.slice(lead.length)}</span>` : text}
-        <span className=${"ml-1 inline-block h-[0.95em] w-[0.5em] translate-y-[0.12em] bg-accent " + (typing ? "" : "caret-blink")}></span>
-      </span>
-    </p>`;
+    <div className="relative mt-6 space-y-3 text-base leading-relaxed sm:text-lg xl:text-xl">
+      <span className="sr-only">${INTRO.join(" ")}</span>
+      <div aria-hidden="true" className="invisible space-y-3">${block(INTRO, false)}</div>
+      <div aria-hidden="true" className="absolute inset-0 space-y-3">${block(lines, true)}</div>
+    </div>`;
 }
 
 // The Swasey Chapel doodle starts in grayscale. Wherever the cursor goes, color
@@ -563,7 +568,6 @@ function Chapel() {
 function Denison() {
   const A = C.about;
   const campusJobs = C.experience.filter((j) => j.org === "Denison University");
-  const sk = C.skills;
   return html`
     <div>
       <${Head} title="At Denison">Granville, Ohio. Where I study computer science and digital humanities, help run a club, coach peers, and build AI tools for campus.<//>
