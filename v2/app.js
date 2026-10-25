@@ -84,11 +84,10 @@ const ExtLink = ({ href, children }) => html`
   <a href=${u(href)} target=${href.startsWith("#") ? null : "_blank"} rel="noopener"
      className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent">${children}</a>`;
 
-function Head({ cmd, title, children }) {
+function Head({ title, children }) {
   return html`
     <header className="mb-10">
-      <p className="text-sm text-dim"><span className="text-accent">~/portfolio $</span> ${cmd}</p>
-      <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">${title}</h2>
+      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">${title}</h2>
       ${children ? html`<p className="mt-4 max-w-2xl leading-relaxed text-dim">${children}</p>` : null}
     </header>`;
 }
@@ -265,7 +264,7 @@ function Doodle() {
               className="pointer-events-none absolute -left-0 -top-0 -ml-[1px] rounded-full border border-accent opacity-0 transition-opacity [translate:-50%_-50%]"></span>
       </div>
       <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-dim">
-        <span>${pct >= 97 ? "// fully colored. thank you ✓" : "// fig.00 · go big red · hover (or drag) to color it in. the color stays."}</span>
+        <span>${pct >= 97 ? "// fully colored. thank you ✓" : "// hover (or drag) to color it in"}</span>
         <span className="flex gap-2">
           <button onClick=${() => fill(true)} className="border border-line px-2 py-1 hover:border-accent hover:text-fg">color all</button>
           <button onClick=${() => fill(false)} className="border border-line px-2 py-1 hover:border-accent hover:text-fg">reset</button>
@@ -328,7 +327,7 @@ function RolePicker() {
 function GitLog() {
   return html`
     <section className="mt-20">
-      <${Head} cmd="git log --graph experience" title="Work">Where I've shipped things, newest first.<//>
+      <${Head} title="Work">Where I've shipped things, newest first.<//>
       <ol className="relative ml-1.5 border-l border-line">
         ${C.experience.map((j, i) => html`
           <li key=${j.role} className="relative pb-12 pl-7 last:pb-0 sm:pl-10">
@@ -345,7 +344,7 @@ function GitLog() {
               ${j.impact.map((x) => html`<p key=${x} className="border-l-2 border-accent bg-accent/[0.06] px-3 py-1"><span className="text-accent">+ </span>${x}</p>`)}
             </div>
             <details className="group mt-3 max-w-3xl text-sm">
-              <summary className="text-dim hover:text-fg"><span className="inline-block transition-transform group-open:rotate-90">›</span> git show --stat</summary>
+              <summary className="text-dim hover:text-fg"><span className="inline-block transition-transform group-open:rotate-90">›</span> more details</summary>
               <ul className="mt-2 space-y-2 border-l border-line pl-4 text-dim">
                 ${j.bullets.map((b) => html`<li key=${b.text} className="leading-relaxed">${emph(b.text)}</li>`)}
               </ul>
@@ -359,11 +358,9 @@ function GitLog() {
 function Home() {
   return html`
     <div>
-      <section className="grid items-center gap-10 lg:min-h-[calc(100vh-170px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-14">
+      <section className="grid items-center gap-10 lg:min-h-[calc(100vh-142px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-14">
         <div>
-          <p className="text-sm"><${Cm}>01_home.tsx · hello, world</${Cm}></p>
-          <h1 className="mt-5 text-sm sm:text-base"><${K}>const</${K}> name = <${S}>${C.name}</${S}>;</h1>
-          <p className="mt-8 text-sm text-dim"><span className="text-accent">~/portfolio $</span> ./intro.sh</p>
+          <h1 className="text-sm sm:text-base"><${K}>const</${K}> name = <${S}>${C.name}</${S}>;</h1>
           <${Typewriter} />
           <div className="mt-8 flex flex-wrap gap-3 text-sm">
             <a href="#projects" className="bg-accent px-4 py-2 font-medium text-ink hover:bg-fg">open projects →</a>
@@ -442,7 +439,7 @@ function ProjectCard({ p, i, openLb }) {
   const s = slug(p.title);
   const [before, after] = (p.stat || "").split(/\s*→\s*/);
   return html`
-    <article id=${"p-" + s} className="scroll-mt-28 border border-line bg-panel">
+    <article id=${"p-" + s} className="scroll-mt-20 border border-line bg-panel">
       <div className="flex items-center justify-between gap-4 border-b border-line px-4 py-2 text-xs text-dim">
         <span className="truncate">projects/${s}/<span className="text-fg">README.md</span></span>
         <span className="shrink-0 tabular-nums">${pad(i + 1)} / ${pad(C.projects.length)}</span>
@@ -474,15 +471,14 @@ function Projects({ openLb }) {
       className=${"border px-3 py-1 transition-colors " + (lens === id ? "border-accent bg-accent text-ink" : "border-line text-dim hover:border-accent hover:text-fg")}>${label}</button>`;
   return html`
     <div>
-      <${Head} cmd="ls ./projects" title="Projects">Software, research, and the things in between. Each one opens like a README: what it is, what changed, and what it's built with.<//>
+      <${Head} title="Projects">Software, research, and the things in between.<//>
       <div className="mb-8 flex flex-wrap items-center gap-2 text-sm">
         <span className="mr-1 text-dim">--filter=</span>
         ${chip("all", "all")}${Object.entries(LENS).map(([id, label]) => chip(id, label))}
       </div>
       <div className="grid gap-10 xl:grid-cols-[190px_minmax(0,1fr)]">
-        <nav aria-label="Project files" className="hidden self-start text-sm xl:sticky xl:top-28 xl:block">
-          <p className="text-xs uppercase tracking-[0.2em] text-dim">explorer</p>
-          <p className="mt-3">▾ projects/</p>
+        <nav aria-label="Project files" className="hidden self-start text-sm xl:sticky xl:top-20 xl:block">
+          <p>▾ projects/</p>
           <ul className="mt-1 border-l border-line">
             ${list.map((p) => html`
               <li key=${p.title}><a href=${"#projects/" + slug(p.title)} className="block truncate py-1 pl-3 text-dim hover:text-accent">${slug(p.title)}/</a></li>`)}
@@ -501,12 +497,11 @@ function Artwork({ openLb }) {
   const total = ART.reduce((n, s) => n + s.pages.length, 0);
   return html`
     <div>
-      <${Head} cmd="cd ./artwork && ls -l" title="Art & doodles">Ink and marker comics about family, home, and the places in between, plus digital doodles. Click any page to open it, then flip with the arrow keys or a swipe.<//>
+      <${Head} title="Art & doodles">Ink and marker comics about family, home, and the places in between, plus digital doodles. Click any page to open it.<//>
       <nav aria-label="Pieces" className="max-w-3xl border border-line bg-panel p-4 text-xs sm:text-sm">
         <p className="mb-2 text-dim">total ${total}</p>
         ${ART.map((s) => html`
-          <a key=${s.slug} href=${"#artwork/" + s.slug} className="grid grid-cols-[3ch_minmax(0,1fr)] gap-x-4 py-0.5 hover:text-accent sm:grid-cols-[11ch_3ch_22ch_minmax(0,1fr)]">
-            <span className="hidden text-faint sm:inline">drwxr-xr-x</span>
+          <a key=${s.slug} href=${"#artwork/" + s.slug} className="grid grid-cols-[3ch_minmax(0,1fr)] gap-x-4 py-0.5 hover:text-accent sm:grid-cols-[3ch_22ch_minmax(0,1fr)]">
             <span className="tabular-nums text-dim">${pad(s.pages.length)}</span>
             <span className="hidden truncate text-dim sm:inline">${s.kind}</span>
             <span className="truncate"><bdi>${s.title}</bdi>/</span>
@@ -520,7 +515,7 @@ function Artwork({ openLb }) {
         }));
         const cols = s.pages.length === 1 ? "max-w-xl" : s.pages.length === 2 ? "columns-2 max-w-4xl" : "columns-2 md:columns-3 xl:columns-4";
         return html`
-          <section key=${s.slug} id=${"a-" + s.slug} className="mt-20 scroll-mt-28">
+          <section key=${s.slug} id=${"a-" + s.slug} className="mt-20 scroll-mt-20">
             <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-line pb-3">
               <span className="text-sm text-accent">${pad(si + 1)}</span>
               <h3 className="text-xl font-bold sm:text-2xl"><bdi>${s.title}</bdi></h3>
@@ -536,10 +531,7 @@ function Artwork({ openLb }) {
                          className="h-auto w-full transition-transform duration-300 group-hover:scale-[1.03]" />
                     ${pg.video ? html`<span className="absolute bottom-2 left-2 bg-ink/85 px-1.5 py-0.5 text-[11px] text-accent">▸ clip</span>` : null}
                   </span>
-                  <span className="mt-1.5 flex justify-between text-[11px] text-dim group-hover:text-fg">
-                    <span className="truncate">${s.slug}/p${pad(pi + 1)}</span><span>.${pg.video ? "mp4" : "webp"}</span>
-                  </span>
-                  ${pg.caption ? html`<span className="mt-1 block text-xs leading-relaxed text-dim">${pg.caption}</span>` : null}
+                  ${pg.caption ? html`<span className="mt-1.5 block text-xs leading-relaxed text-dim">${pg.caption}</span>` : null}
                 </button>`)}
             </div>
           </section>`;
@@ -574,7 +566,7 @@ function Denison() {
   const sk = C.skills;
   return html`
     <div>
-      <${Head} cmd="whoami --campus" title="At Denison">Granville, Ohio. Where I study computer science and digital humanities, help run a club, coach peers, and build AI tools for campus.<//>
+      <${Head} title="At Denison">Granville, Ohio. Where I study computer science and digital humanities, help run a club, coach peers, and build AI tools for campus.<//>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <div className="border border-line bg-panel">
@@ -601,8 +593,7 @@ function Denison() {
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           ${C.leadership.map((r) => html`
             <article key=${r.title} className="border border-line bg-panel p-5 transition-colors hover:border-accent">
-              <p className="text-xs text-dim">roles/${slug(r.title)}.md</p>
-              <h4 className="mt-3 text-lg font-bold leading-snug">${r.title}</h4>
+              <h4 className="text-lg font-bold leading-snug">${r.title}</h4>
               <p className="mt-2 text-sm text-dim">${r.note}</p>
               <p className="mt-4 text-xs text-accent">[${r.lens.map((l) => LENS[l]).join(", ")}]</p>
             </article>`)}
@@ -644,8 +635,7 @@ function Contact() {
   ];
   return html`
     <div className="flex min-h-[60vh] flex-col justify-center">
-      <p className="text-sm text-dim"><span className="text-accent">~/portfolio $</span> contact --list</p>
-      <h2 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">Let's build<br />something<span className="text-accent">.</span></h2>
+      <h2 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">Let's build<br />something<span className="text-accent">.</span></h2>
       <p className="mt-5 max-w-xl leading-relaxed text-dim">Open to data science, software engineering, and product roles for 2027.</p>
       <div className="mt-10 max-w-2xl border border-line bg-panel text-sm">
         ${rows.map(([k, label, href]) => html`
@@ -669,7 +659,7 @@ function Resume() {
   return html`
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3 border border-line bg-panel px-4 py-2 text-xs text-dim">
-        <span className="text-fg">06_resume.pdf</span><span>· 1 page · generated from content.js</span>
+        <span className="text-fg">06_resume.pdf</span><span>· 1 page</span>
         <span className="ml-auto flex gap-2">
           ${C.resume ? html`<a href=${u(C.resume)} download className="border border-line px-2 py-1 hover:border-accent hover:text-fg">download pdf</a>` : null}
           <button onClick=${() => print()} className="bg-accent px-2 py-1 font-medium text-ink hover:bg-fg">print / save as pdf</button>
@@ -770,7 +760,6 @@ function Lightbox({ lb, setLb }) {
 function TabBar({ tab }) {
   const active = useRef(null);
   useEffect(() => { active.current?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [tab]);
-  const file = TABS.find((t) => t.id === tab).file;
   return html`
     <header className="fixed inset-x-0 top-0 z-40 bg-ink">
       <div className="flex h-11 border-b border-line">
@@ -784,10 +773,6 @@ function TabBar({ tab }) {
               ${t.file}
             </a>`)}
         </nav>
-      </div>
-      <div className="flex h-7 items-center gap-2 border-b border-line bg-panel px-4 text-xs text-dim">
-        <span>portfolio</span><span>›</span><span>src</span><span>›</span><span className="text-fg">${file}</span>
-        <span className="ml-auto hidden md:inline">shizza fatima shafqat · cs @ denison '27</span>
       </div>
     </header>`;
 }
@@ -864,7 +849,7 @@ function App() {
     <${React.Fragment}>
       <a href="#main" onClick=${(e) => { e.preventDefault(); page.current?.focus(); }} className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:bg-accent focus:px-3 focus:py-1 focus:text-ink">skip to content</a>
       <${TabBar} tab=${route.tab} />
-      <div className="flex pb-7 pt-[72px]">
+      <div className="flex pb-7 pt-11">
         <${Gutter} target=${page} tab=${route.tab} />
         <main ref=${page} tabIndex="-1" className="min-w-0 flex-1 self-start outline-none">
           <div key=${route.tab} className="tab-open mx-auto max-w-[1400px] px-4 py-10 sm:px-8 sm:py-12 lg:px-12">
