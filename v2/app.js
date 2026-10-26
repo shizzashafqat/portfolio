@@ -18,11 +18,6 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const u = (p) => (/^(https?:|mailto:|#|\.\.\/)/.test(p) ? p : "../" + p);
 const pad = (n) => String(n).padStart(2, "0");
 const slug = (t) => t.toLowerCase().replace(/\./g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "x";
-const hash7 = (s) => {
-  let h = 2166136261;
-  for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
-  return (h >>> 0).toString(16).padStart(8, "0").slice(0, 7);
-};
 const LENS = { ds: "data science", swe: "software engineering", pm: "product management" };
 
 const TABS = [
@@ -84,79 +79,88 @@ const ExtLink = ({ href, children }) => html`
   <a href=${u(href)} target=${href.startsWith("#") ? null : "_blank"} rel="noopener"
      className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent">${children}</a>`;
 
-function Head({ cmd, title, children }) {
+function Head({ title, children }) {
   return html`
     <header className="mb-10">
-      <p className="text-sm text-dim"><span className="text-accent">~/portfolio $</span> ${cmd}</p>
-      <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">${title}</h2>
+      <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">${title}</h2>
       ${children ? html`<p className="mt-4 max-w-2xl leading-relaxed text-dim">${children}</p>` : null}
     </header>`;
 }
 
 // ── 01 · home ──
 
-// Types like a person: a playful typo, a wipe, self-corrections, then a loop of who I am
-const IDENTITIES = [
-  "an aspiring software engineer.",
-  "an aspiring data scientist.",
-  "an aspiring product manager.",
-  "a digital artist & builder.",
-  "a cs student at denison.",
+// The intro types itself out one line at a time, and corrects itself once
+const SKILLS = [...C.skills.languages, ...C.skills.frameworks.slice(0, 3)];
+const INTRO = [
+  "Shizza is a senior computer science major at Denison University, graduating May 2027.",
+  "Shizza is an aspiring software engineer, product manager and data scientist.",
+  "Shizza has experience at startups and on institution-level Denison projects in AI and automation.",
+  "Shizza is the president of Women in Math, Data Analytics & CS at Denison.",
+  `Shizza has skills across ${SKILLS.slice(0, -1).join(", ")} and ${SKILLS[SKILLS.length - 1]}.`,
 ];
-const FINAL = "shizza is a senior cs student at denison, graduating may 2027.";
+const INTRO_TEXT = INTRO.join("\n");
 
 function useTypewriter() {
-  const [text, setText] = useState(reduceMotion ? FINAL : "");
+  const [text, setText] = useState(reduceMotion ? INTRO_TEXT : "");
   const [typing, setTyping] = useState(false);
+  const skip = useRef(null);
   useEffect(() => {
     if (reduceMotion) return;
     let alive = true, cur = "";
+    skip.current = () => { alive = false; setText(INTRO_TEXT); setTyping(false); };
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const set = (t) => { cur = t; if (alive) setText(t); };
-    const key = (ch) => 45 + Math.random() * 75 + (ch === " " ? 40 : 0) + (/[.,]/.test(ch) ? 160 : 0);
+    const key = (ch) => 28 + Math.random() * 40 + (ch === " " ? 25 : 0) + (/[.,]/.test(ch) ? 140 : 0);
     const type = async (s) => {
-      setTyping(true);
+      if (alive) setTyping(true);
       for (const ch of s) { if (!alive) return; set(cur + ch); await sleep(key(ch)); }
-      setTyping(false);
+      if (alive) setTyping(false);
     };
-    const back = async (n, ms = 30) => {
-      setTyping(true);
+    const back = async (n, ms) => {
+      if (alive) setTyping(true);
       for (let i = 0; i < n; i++) { if (!alive) return; set(cur.slice(0, -1)); await sleep(ms); }
-      setTyping(false);
     };
-    const backTo = (prefix) => back(cur.length - prefix.length, 22);
     (async () => {
-      await sleep(700);
-      await type("welcme to shizza's website...");
-      await sleep(1100); await back(cur.length, 16); await sleep(500);
-      await type("shizza is a senoor");
-      await sleep(450); await back(3, 90); await type("ior cs student at denison, fradsu");
-      await sleep(420); await back(6, 80); await type("graduating may 2027.");
-      await sleep(2400); await backTo("shizza is a "); await sleep(300);
-      await type("cs student."); await sleep(1600);
-      for (let i = 0; alive; i = (i + 1) % IDENTITIES.length) {
-        await backTo("shizza is "); await sleep(260);
-        await type(IDENTITIES[i]); await sleep(2000);
+      await sleep(600);
+      for (const [i, line] of INTRO.entries()) {
+        if (!alive) return;
+        if (i) set(cur + "\n");
+        if (line.includes("an aspiring")) {
+          // "amazing" first, then think better of it
+          await type("Shizza is an amazing");
+          await sleep(650); await back("amazing".length, 70); await sleep(250);
+          await type(line.slice("Shizza is an ".length));
+        } else {
+          await type(line);
+        }
+        await sleep(700);
       }
     })();
     return () => { alive = false; };
   }, []);
-  return [text, typing];
+  return [text, typing, text !== INTRO_TEXT && !reduceMotion ? () => skip.current?.() : null];
+}
+
+function IntroLines({ text, caret }) {
+  const lines = text.split("\n");
+  return lines.map((l, i) => html`
+    <span key=${i} className="block [&:not(:first-child)]:mt-2">
+      <span className="text-accent">${"> "}</span>${l.startsWith("Shizza") ? html`<span><span className="text-accent">Shizza</span>${l.slice(6)}</span>` : l}${i === lines.length - 1 ? caret : null}
+    </span>`);
 }
 
 function Typewriter() {
-  const [text, typing] = useTypewriter();
-  const lead = "shizza is ";
-  const split = text.startsWith(lead);
+  const [text, typing, skip] = useTypewriter();
+  const caret = html`<span className=${"ml-1 inline-block h-[0.95em] w-[0.5em] translate-y-[0.15em] bg-accent " + (typing ? "" : "caret-blink")}></span>`;
   return html`
-    <p className="mt-3 min-h-[3.9em] text-[1.65rem] font-medium leading-[1.3] sm:text-4xl xl:text-5xl" >
-      <span className="sr-only">${FINAL} Aspiring software engineer, data scientist and product manager, and a digital artist.</span>
-      <span aria-hidden="true">
-        <span className="text-accent">${"> "}</span>
-        ${split ? html`${lead}<span className="text-accent">${text.slice(lead.length)}</span>` : text}
-        <span className=${"ml-1 inline-block h-[0.95em] w-[0.5em] translate-y-[0.12em] bg-accent " + (typing ? "" : "caret-blink")}></span>
-      </span>
-    </p>`;
+    <div className="mt-6">
+      <p className="sr-only">${INTRO.join(" ")}</p>
+      <div aria-hidden="true" className="grid text-lg leading-[1.55] sm:text-xl xl:text-2xl [&>*]:[grid-area:1/1]">
+        <p className="invisible"><${IntroLines} text=${INTRO_TEXT} /></p>
+        <p><${IntroLines} text=${text} caret=${caret} /></p>
+      </div>
+      ${skip ? html`<button onClick=${skip} className="mt-3 text-xs text-dim hover:text-accent">skip typing ›</button>` : null}
+    </div>`;
 }
 
 // The Swasey Chapel doodle starts in grayscale. Wherever the cursor goes, color
@@ -265,31 +269,13 @@ function Doodle() {
               className="pointer-events-none absolute -left-0 -top-0 -ml-[1px] rounded-full border border-accent opacity-0 transition-opacity [translate:-50%_-50%]"></span>
       </div>
       <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-dim">
-        <span>${pct >= 97 ? "// fully colored. thank you ✓" : "// fig.00 · go big red · hover (or drag) to color it in. the color stays."}</span>
+        <span>${pct >= 97 ? "// fully colored ✓" : "// hover to color it in"}</span>
         <span className="flex gap-2">
           <button onClick=${() => fill(true)} className="border border-line px-2 py-1 hover:border-accent hover:text-fg">color all</button>
           <button onClick=${() => fill(false)} className="border border-line px-2 py-1 hover:border-accent hover:text-fg">reset</button>
         </span>
       </figcaption>
     </figure>`;
-}
-
-function AboutCode() {
-  const A = C.about;
-  const rows = [["year", A.year], ["studying", A.study], ["school", A.school], ["gpa", A.gpa]];
-  return html`
-    <div className="border border-line bg-panel">
-      <p className="border-b border-line px-4 py-2 text-xs text-dim">about.ts</p>
-      <${Code}>
-        <${Ln}><${K}>const</${K}> shizza = ${"{"}</${Ln}>
-        ${rows.map(([k, v]) => html`<${Ln} key=${k} i=${1}><${P}>${k}</${P}>: <${S}>${v}</${S}>,</${Ln}>`)}
-        <${Ln} i=${1}><${P}>courses</${P}>: [</${Ln}>
-        ${A.courses.map((c) => html`<${Ln} key=${c} i=${2}><${S}>${c}</${S}>,</${Ln}>`)}
-        <${Ln} i=${1}>],</${Ln}>
-        <${Ln} i=${1}><${P}>email</${P}>: <${S}>${C.email}</${S}>,</${Ln}>
-        <${Ln}>${"};"}</${Ln}>
-      </${Code}>
-    </div>`;
 }
 
 function RolePicker() {
@@ -300,7 +286,7 @@ function RolePicker() {
     <div className="border border-line bg-panel">
       <p className="border-b border-line px-4 py-2 text-xs text-dim">roles.ts</p>
       <div className="p-4 sm:p-5">
-        <p className="text-sm"><${Cm}>interested in · pick a role to see the projects for it</${Cm}></p>
+        <p className="text-sm"><${Cm}>pick a role to see matching projects</${Cm}></p>
         <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Roles">
           ${C.roles.map((r) => html`
             <button key=${r.lens} aria-pressed=${lens === r.lens} onClick=${() => setLens(lens === r.lens ? "" : r.lens)}
@@ -328,24 +314,20 @@ function RolePicker() {
 function GitLog() {
   return html`
     <section className="mt-20">
-      <${Head} cmd="git log --graph experience" title="Work">Where I've shipped things, newest first.<//>
+      <${Head} title="Work" />
       <ol className="relative ml-1.5 border-l border-line">
         ${C.experience.map((j, i) => html`
           <li key=${j.role} className="relative pb-12 pl-7 last:pb-0 sm:pl-10">
             <span className=${"absolute -left-[6px] top-1.5 h-[11px] w-[11px] rounded-full border-2 " + (i === 0 ? "border-accent bg-accent" : "border-accent bg-ink")}></span>
-            <p className="text-xs text-dim">
-              <span className="text-accent">commit ${hash7(j.role + j.when)}</span>
-              ${i === 0 ? html`<span className="ml-2 text-fg">(HEAD → main)</span>` : null}
-            </p>
-            <p className="mt-1 text-xs text-dim">${j.when} · ${j.where}</p>
-            <h3 className="mt-3 text-lg font-bold leading-snug sm:text-xl">${j.role}</h3>
+            <p className="text-xs text-dim">${j.when} · ${j.where}</p>
+            <h3 className="mt-2 text-lg font-bold leading-snug sm:text-xl">${j.role}</h3>
             <p className="text-sm text-dim">@ ${j.org}</p>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed">${emph(j.summary)}</p>
             <div className="mt-4 max-w-3xl border border-line bg-panel text-sm">
               ${j.impact.map((x) => html`<p key=${x} className="border-l-2 border-accent bg-accent/[0.06] px-3 py-1"><span className="text-accent">+ </span>${x}</p>`)}
             </div>
             <details className="group mt-3 max-w-3xl text-sm">
-              <summary className="text-dim hover:text-fg"><span className="inline-block transition-transform group-open:rotate-90">›</span> git show --stat</summary>
+              <summary className="text-dim hover:text-fg"><span className="inline-block transition-transform group-open:rotate-90">›</span> details</summary>
               <ul className="mt-2 space-y-2 border-l border-line pl-4 text-dim">
                 ${j.bullets.map((b) => html`<li key=${b.text} className="leading-relaxed">${emph(b.text)}</li>`)}
               </ul>
@@ -359,11 +341,9 @@ function GitLog() {
 function Home() {
   return html`
     <div>
-      <section className="grid items-center gap-10 lg:min-h-[calc(100vh-170px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-14">
+      <section className="grid items-center gap-10 lg:min-h-[calc(100vh-140px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-14">
         <div>
-          <p className="text-sm"><${Cm}>01_home.tsx · hello, world</${Cm}></p>
-          <h1 className="mt-5 text-sm sm:text-base"><${K}>const</${K}> name = <${S}>${C.name}</${S}>;</h1>
-          <p className="mt-8 text-sm text-dim"><span className="text-accent">~/portfolio $</span> ./intro.sh</p>
+          <h1 className="text-sm sm:text-base"><${K}>const</${K}> name = <${S}>${C.name}</${S}>;</h1>
           <${Typewriter} />
           <div className="mt-8 flex flex-wrap gap-3 text-sm">
             <a href="#projects" className="bg-accent px-4 py-2 font-medium text-ink hover:bg-fg">open projects →</a>
@@ -374,8 +354,7 @@ function Home() {
         <${Doodle} />
       </section>
 
-      <section className="mt-20 grid gap-6 lg:grid-cols-2">
-        <${AboutCode} />
+      <section className="mt-20 max-w-3xl">
         <${RolePicker} />
       </section>
 
@@ -455,7 +434,6 @@ function ProjectCard({ p, i, openLb }) {
           <p className="mt-4 text-sm leading-relaxed">${emph(p.blurb)}</p>
           ${p.stat ? html`
             <div className="mt-5 border border-line bg-ink text-sm">
-              <p className="border-b border-line bg-raised px-3 py-1 text-xs text-dim">@@ key metric @@</p>
               ${after ? html`<p className="px-3 py-1 text-dim">- <span className="line-through decoration-faint">${before}</span></p>` : null}
               <p className="border-l-2 border-accent bg-accent/[0.08] px-3 py-1 text-accent">+ ${after || before}</p>
             </div>` : null}
@@ -474,7 +452,7 @@ function Projects({ openLb }) {
       className=${"border px-3 py-1 transition-colors " + (lens === id ? "border-accent bg-accent text-ink" : "border-line text-dim hover:border-accent hover:text-fg")}>${label}</button>`;
   return html`
     <div>
-      <${Head} cmd="ls ./projects" title="Projects">Software, research, and the things in between. Each one opens like a README: what it is, what changed, and what it's built with.<//>
+      <${Head} title="Projects" />
       <div className="mb-8 flex flex-wrap items-center gap-2 text-sm">
         <span className="mr-1 text-dim">--filter=</span>
         ${chip("all", "all")}${Object.entries(LENS).map(([id, label]) => chip(id, label))}
@@ -498,15 +476,12 @@ function Projects({ openLb }) {
 // ── 03 · artwork ──
 
 function Artwork({ openLb }) {
-  const total = ART.reduce((n, s) => n + s.pages.length, 0);
   return html`
     <div>
-      <${Head} cmd="cd ./artwork && ls -l" title="Art & doodles">Ink and marker comics about family, home, and the places in between, plus digital doodles. Click any page to open it, then flip with the arrow keys or a swipe.<//>
+      <${Head} title="Art & doodles">Comics about family, home, and the places in between, plus digital doodles. Click any page to open it.<//>
       <nav aria-label="Pieces" className="max-w-3xl border border-line bg-panel p-4 text-xs sm:text-sm">
-        <p className="mb-2 text-dim">total ${total}</p>
         ${ART.map((s) => html`
-          <a key=${s.slug} href=${"#artwork/" + s.slug} className="grid grid-cols-[3ch_minmax(0,1fr)] gap-x-4 py-0.5 hover:text-accent sm:grid-cols-[11ch_3ch_22ch_minmax(0,1fr)]">
-            <span className="hidden text-faint sm:inline">drwxr-xr-x</span>
+          <a key=${s.slug} href=${"#artwork/" + s.slug} className="grid grid-cols-[3ch_minmax(0,1fr)] gap-x-4 py-0.5 hover:text-accent sm:grid-cols-[3ch_22ch_minmax(0,1fr)]">
             <span className="tabular-nums text-dim">${pad(s.pages.length)}</span>
             <span className="hidden truncate text-dim sm:inline">${s.kind}</span>
             <span className="truncate"><bdi>${s.title}</bdi>/</span>
@@ -536,10 +511,7 @@ function Artwork({ openLb }) {
                          className="h-auto w-full transition-transform duration-300 group-hover:scale-[1.03]" />
                     ${pg.video ? html`<span className="absolute bottom-2 left-2 bg-ink/85 px-1.5 py-0.5 text-[11px] text-accent">▸ clip</span>` : null}
                   </span>
-                  <span className="mt-1.5 flex justify-between text-[11px] text-dim group-hover:text-fg">
-                    <span className="truncate">${s.slug}/p${pad(pi + 1)}</span><span>.${pg.video ? "mp4" : "webp"}</span>
-                  </span>
-                  ${pg.caption ? html`<span className="mt-1 block text-xs leading-relaxed text-dim">${pg.caption}</span>` : null}
+                  ${pg.caption ? html`<span className="mt-2 block text-xs leading-relaxed text-dim">${pg.caption}</span>` : null}
                 </button>`)}
             </div>
           </section>`;
@@ -574,7 +546,7 @@ function Denison() {
   const sk = C.skills;
   return html`
     <div>
-      <${Head} cmd="whoami --campus" title="At Denison">Granville, Ohio. Where I study computer science and digital humanities, help run a club, coach peers, and build AI tools for campus.<//>
+      <${Head} title="At Denison">Granville, Ohio.<//>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <div className="border border-line bg-panel">
@@ -601,10 +573,8 @@ function Denison() {
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           ${C.leadership.map((r) => html`
             <article key=${r.title} className="border border-line bg-panel p-5 transition-colors hover:border-accent">
-              <p className="text-xs text-dim">roles/${slug(r.title)}.md</p>
-              <h4 className="mt-3 text-lg font-bold leading-snug">${r.title}</h4>
+              <h4 className="text-lg font-bold leading-snug">${r.title}</h4>
               <p className="mt-2 text-sm text-dim">${r.note}</p>
-              <p className="mt-4 text-xs text-accent">[${r.lens.map((l) => LENS[l]).join(", ")}]</p>
             </article>`)}
         </div>
       </section>
@@ -644,8 +614,7 @@ function Contact() {
   ];
   return html`
     <div className="flex min-h-[60vh] flex-col justify-center">
-      <p className="text-sm text-dim"><span className="text-accent">~/portfolio $</span> contact --list</p>
-      <h2 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">Let's build<br />something<span className="text-accent">.</span></h2>
+      <h2 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">Let's build<br />something<span className="text-accent">.</span></h2>
       <p className="mt-5 max-w-xl leading-relaxed text-dim">Open to data science, software engineering, and product roles for 2027.</p>
       <div className="mt-10 max-w-2xl border border-line bg-panel text-sm">
         ${rows.map(([k, label, href]) => html`
@@ -655,7 +624,6 @@ function Contact() {
             ${k === "email" ? html`<button onClick=${copy} className="ml-auto border border-line px-2 py-0.5 text-xs text-dim hover:border-accent hover:text-fg">${copied ? "copied ✓" : "copy"}</button>` : null}
           </div>`)}
       </div>
-      <p className="mt-6 text-xs text-dim">${"// based in granville, oh · usually replies within a day"}</p>
     </div>`;
 }
 
@@ -669,7 +637,7 @@ function Resume() {
   return html`
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3 border border-line bg-panel px-4 py-2 text-xs text-dim">
-        <span className="text-fg">06_resume.pdf</span><span>· 1 page · generated from content.js</span>
+        <span className="text-fg">06_resume.pdf</span>
         <span className="ml-auto flex gap-2">
           ${C.resume ? html`<a href=${u(C.resume)} download className="border border-line px-2 py-1 hover:border-accent hover:text-fg">download pdf</a>` : null}
           <button onClick=${() => print()} className="bg-accent px-2 py-1 font-medium text-ink hover:bg-fg">print / save as pdf</button>
@@ -770,7 +738,6 @@ function Lightbox({ lb, setLb }) {
 function TabBar({ tab }) {
   const active = useRef(null);
   useEffect(() => { active.current?.scrollIntoView({ block: "nearest", inline: "nearest" }); }, [tab]);
-  const file = TABS.find((t) => t.id === tab).file;
   return html`
     <header className="fixed inset-x-0 top-0 z-40 bg-ink">
       <div className="flex h-11 border-b border-line">
@@ -785,36 +752,23 @@ function TabBar({ tab }) {
             </a>`)}
         </nav>
       </div>
-      <div className="flex h-7 items-center gap-2 border-b border-line bg-panel px-4 text-xs text-dim">
-        <span>portfolio</span><span>›</span><span>src</span><span>›</span><span className="text-fg">${file}</span>
-        <span className="ml-auto hidden md:inline">shizza fatima shafqat · cs @ denison '27</span>
-      </div>
     </header>`;
 }
 
-function StatusBar({ tab }) {
-  const [ln, setLn] = useState(1);
+function StatusBar() {
   const [time, setTime] = useState("");
   useEffect(() => {
-    let f = 0;
-    const onScroll = () => { if (!f) f = requestAnimationFrame(() => { f = 0; setLn(Math.floor(scrollY / 24) + 1); }); };
     const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", hour12: false, timeZoneName: "short" });
     const tick = () => setTime(fmt.format(new Date()));
     tick();
     const id = setInterval(tick, 15000);
-    addEventListener("scroll", onScroll, { passive: true });
-    return () => { removeEventListener("scroll", onScroll); clearInterval(id); };
+    return () => clearInterval(id);
   }, []);
-  const pdf = tab === "resume";
   return html`
     <footer className="fixed inset-x-0 bottom-0 z-40 flex h-7 items-center gap-4 border-t border-line bg-panel px-3 text-[11px] text-dim">
       <span><span className="text-accent">⎇</span> main</span>
-      <span className="hidden sm:inline">✓ 0 problems</span>
-      <span className="hidden lg:inline">press 1–6 to switch files</span>
       <span className="ml-auto flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-accent"></span>open to 2027 roles</span>
-      <span className="hidden tabular-nums sm:inline">Ln ${ln}, Col 1</span>
-      <span className="hidden md:inline">${pdf ? "PDF" : "TypeScript React"}</span>
-      <span className="hidden tabular-nums md:inline">granville ${time}</span>
+      <span className="hidden tabular-nums sm:inline">granville ${time}</span>
     </footer>`;
 }
 
@@ -864,7 +818,7 @@ function App() {
     <${React.Fragment}>
       <a href="#main" onClick=${(e) => { e.preventDefault(); page.current?.focus(); }} className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:bg-accent focus:px-3 focus:py-1 focus:text-ink">skip to content</a>
       <${TabBar} tab=${route.tab} />
-      <div className="flex pb-7 pt-[72px]">
+      <div className="flex pb-7 pt-11">
         <${Gutter} target=${page} tab=${route.tab} />
         <main ref=${page} tabIndex="-1" className="min-w-0 flex-1 self-start outline-none">
           <div key=${route.tab} className="tab-open mx-auto max-w-[1400px] px-4 py-10 sm:px-8 sm:py-12 lg:px-12">
@@ -875,7 +829,7 @@ function App() {
           </p>
         </main>
       </div>
-      <${StatusBar} tab=${route.tab} />
+      <${StatusBar} />
       ${lb ? html`<${Lightbox} lb=${lb} setLb=${setLb} />` : null}
     <//>`;
 }
