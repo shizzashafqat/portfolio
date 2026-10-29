@@ -120,7 +120,7 @@ window.CONTENT = {
       stack: ["JavaScript", "Data pipelines", "APIs"],
       stat: "100M+ tokens/mo",
       shipped: "product shipped · can't share the link",
-      why: "Built for the administrators who run Denison's AI program, so they can see where AI funding goes, how much the college spends on tokens, and who is using them.",
+      why: "Built for the administrators who run Denison's AI program, so they can see where AI funding goes, how much the college spends on tokens, and how many people are using it.",
       links: [],
     },
     {
