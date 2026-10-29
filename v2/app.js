@@ -333,7 +333,7 @@ function Visual({ p, openLb }) {
           ${shots.map((s, k) => html`
             <button key=${s.src} onClick=${() => openLb(items, k)} aria-label=${"Open " + s.caption}
                     className="group relative overflow-hidden rounded-[10px] border border-line bg-ink">
-              <img src=${u(s.src)} alt=${p.title + ": " + s.caption} decoding="async"
+              <img src=${u(s.src)} alt=${p.title + ": " + s.caption}
                    className="aspect-[9/19.5] w-full object-cover object-top transition-opacity group-hover:opacity-80" />
               <span className="absolute left-1 top-1 bg-ink/85 px-1 text-[10px] text-accent">${pad(k + 1)}</span>
             </button>`)}
@@ -367,29 +367,21 @@ function Visual({ p, openLb }) {
         </div>
       </div>`;
   }
-  if (p.flow) return html`<${Flow} p=${p} />`;
   return null;
 }
 
-// sources → pipeline → output, as boxes in a row (a column on phones)
-function Flow({ p }) {
+// For shipped work with nothing to show: a note and a paper plane taking off
+function Shipped({ note }) {
   return html`
-    <figure>
-      <ol aria-label=${p.title + " data flow"} className="flex flex-col items-stretch gap-2 text-sm sm:flex-row sm:items-center">
-        ${p.flow.map((step, k) => html`
-          <${React.Fragment} key=${step.label}>
-            ${k ? html`<li aria-hidden="true" className="text-center text-accent"><span className="sm:hidden">↓</span><span className="hidden sm:inline">→</span></li>` : null}
-            <li className="flex-1 border border-line bg-ink p-3">
-              <p className="text-xs text-accent">${pad(k + 1)} · ${step.label}</p>
-              <ul className="mt-2 space-y-0.5 text-dim">${step.items.map((x) => html`<li key=${x}>${x}</li>`)}</ul>
-            </li>
-          <//>`)}
-      </ol>
-      <figcaption className="mt-3 text-xs text-dim">${"// how the data moves"}</figcaption>
-    </figure>`;
+    <div className="mt-5 flex items-end gap-4 text-xs text-dim">
+      <span className="runway" aria-hidden="true">
+        <svg viewBox="0 0 24 24" className="plane"><path d="M1 7 L23 12 L1 17 L5 12 Z M5 12 H23" /></svg>
+      </span>
+      <span>${"// " + note}</span>
+    </div>`;
 }
 
-const hasVisual = (p) => (p.screens || []).length || (p.media || []).length || p.flow;
+const hasVisual = (p) => (p.screens || []).length || (p.media || []).length;
 
 function ProjectCard({ p, i, openLb }) {
   const s = slug(p.title);
@@ -414,6 +406,7 @@ function ProjectCard({ p, i, openLb }) {
             </div>` : null}
           <p className="mt-4 text-sm leading-relaxed"><${K}>import</${K}> ${"{ "}<span className="text-fg">${p.stack.join(", ")}</span>${" }"} <${K}>from</${K}> <${S}>stack</${S}>;</p>
           ${p.links.length ? html`<p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">${p.links.map((l) => html`<${ExtLink} key=${l.href} href=${l.href}>${l.label} ↗</${ExtLink}>`)}</p>` : null}
+          ${!hasVisual(p) && p.shipped ? html`<${Shipped} note=${p.shipped} />` : null}
         </div>
       </div>
     </article>`;

@@ -54,7 +54,7 @@ function skyline() {
   return svg(`0 0 ${W} ${G + 2}`, parts.join(""), "xMidYMax meet");
 }
 
-// Project visual: app screens, photos/video, a data-flow diagram, or an empty "no image" box
+// Project visual: app screens, photos/video, a "shipped" note with a paper plane, or an empty "no image" box
 function visual(p) {
   const shots = p.screens || [];
   const media = p.media || [];
@@ -85,13 +85,12 @@ function visual(p) {
       </div>
       <ol class="vis-cap">${media.map((m, k) => `<li class="label"><b>${pad(k + 1)}</b> ${esc(m.caption)}</li>`).join("")}</ol>`;
   }
-  if (p.flow) {
+  if (p.shipped) {
     return `
-      <ol class="vis flow frame mono" aria-label="${esc(p.title)} data flow">
-        ${p.flow.map((st, k) => `
-          <li><b>${pad(k + 1)} · ${esc(st.label)}</b>${st.items.map((x) => `<span>${esc(x)}</span>`).join("")}</li>`).join("")}
-      </ol>
-      <ol class="vis-cap"><li class="label">how the data moves</li></ol>`;
+      <div class="vis shipped">
+        <span class="runway" aria-hidden="true"><svg viewBox="0 0 24 24" class="plane"><path d="M1 7 L23 12 L1 17 L5 12 Z M5 12 H23"/></svg></span>
+        <span class="label">${esc(p.shipped)}</span>
+      </div>`;
   }
   return `
       <div class="vis empty frame" role="img" aria-label="No image yet">
@@ -137,6 +136,7 @@ function render() {
         <div class="idx label"><span>${pad(i + 1)} / ${pad(C.projects.length)}</span><span>${esc(p.kind)}</span></div>
         <h3>${esc(p.title)}</h3>
         <p>${emphasize(esc(p.blurb))}</p>
+        ${p.why ? `<p class="why">${esc(p.why)}</p>` : ""}
         ${p.stat ? `<div class="metric"><span class="label">key metric</span><b>${esc(p.stat)}</b></div>` : ""}
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
         ${p.links.length ? `<div class="links">${linkList(p.links)}</div>` : ""}

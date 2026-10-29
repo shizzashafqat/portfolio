@@ -229,11 +229,20 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .vis.stack-media .video .tag { pointer-events: none; }
 
 /* nothing to show yet */
-.vis.flow { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); font-size: .8rem; }
-.vis.flow li { background: var(--bg); padding: 1rem; display: grid; align-content: start; gap: .2rem; color: var(--muted); }
-.vis.flow li b { color: var(--ink); font-weight: 500; margin-bottom: .35rem; }
-.vis.flow li + li b::before { content: "→ "; }
-@media (max-width: 640px) { .vis.flow { grid-template-columns: 1fr; } .vis.flow li + li b::before { content: "↓ "; } }
+.vis.shipped { border: 0; background: none; display: flex; align-items: flex-end; gap: 1rem; }
+.runway { position: relative; display: block; width: 9rem; height: 2.5rem; flex-shrink: 0;
+  background: linear-gradient(90deg, var(--line) 50%, transparent 0) bottom left / 8px 1px repeat-x; }
+.plane { position: absolute; left: 0; bottom: 2px; width: 18px; height: 18px;
+  fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round;
+  animation: takeoff 4.2s cubic-bezier(.45,0,.55,1) infinite; }
+@keyframes takeoff {
+  0% { transform: translate(0, 0); opacity: 0; }
+  8% { opacity: 1; }
+  45% { transform: translate(4.5rem, 0) rotate(0); }
+  75% { transform: translate(7.5rem, -1.4rem) rotate(-20deg); opacity: 1; }
+  90%, 100% { transform: translate(9.5rem, -2.4rem) rotate(-24deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .plane { animation: none; transform: translate(4.5rem, 0); } }
 .vis.empty { aspect-ratio: 4 / 3; display: grid; place-items: center; border-style: dashed; border-color: var(--muted); }
 .vis.empty svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .vis.empty path { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; fill: none; }
@@ -244,6 +253,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .sp-body .idx { display: flex; gap: 1rem; margin-bottom: .6rem; }
 .sp-body h3 { font: 400 clamp(2.2rem, 4vw, 3rem)/1.05 var(--serif); margin-bottom: 1rem; }
 .sp-body p { margin-bottom: 1.5rem; max-width: 52ch; }
+.sp-body p.why { margin-top: -.75rem; padding-left: .9rem; border-left: 1px solid var(--line); color: var(--muted); font-size: .92em; }
 .metric {
   display: inline-flex; flex-direction: column; gap: .1rem;
   border: 1px solid var(--line); padding: .6rem .9rem; margin-bottom: 1.5rem;
