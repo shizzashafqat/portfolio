@@ -54,7 +54,7 @@ function skyline() {
   return svg(`0 0 ${W} ${G + 2}`, parts.join(""), "xMidYMax meet");
 }
 
-// Project visual: app screens, photos/video, or an empty "no image" box
+// Project visual: app screens, photos/video, a data-flow diagram, or an empty "no image" box
 function visual(p) {
   const shots = p.screens || [];
   const media = p.media || [];
@@ -84,6 +84,14 @@ function visual(p) {
           </figure>`).join("")}
       </div>
       <ol class="vis-cap">${media.map((m, k) => `<li class="label"><b>${pad(k + 1)}</b> ${esc(m.caption)}</li>`).join("")}</ol>`;
+  }
+  if (p.flow) {
+    return `
+      <ol class="vis flow frame mono" aria-label="${esc(p.title)} data flow">
+        ${p.flow.map((st, k) => `
+          <li><b>${pad(k + 1)} · ${esc(st.label)}</b>${st.items.map((x) => `<span>${esc(x)}</span>`).join("")}</li>`).join("")}
+      </ol>
+      <ol class="vis-cap"><li class="label">how the data moves</li></ol>`;
   }
   return `
       <div class="vis empty frame" role="img" aria-label="No image yet">

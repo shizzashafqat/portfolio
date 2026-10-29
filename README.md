@@ -9,7 +9,7 @@ Live at **https://shizzashafqat.github.io/portfolio**
 - A minimal, monochrome, terminal-flavored layout; my Denison doodle colors in under your cursor
 - An about.txt block at the top; pick a role (data science / software engineering / product management) to see the projects for it
 - Single-line drawings that draw themselves on scroll: a New York skyline and Denison
-- Each project shows real screens, photos or video, and a "no image" box until one is added
+- Each project shows real screens, photos or video, or a simple data-flow diagram
 - An art page (`art.html`) with every page of every piece laid out big, caption space under each page and piece, and a full-screen reader (arrow keys and swipe)
 - Plain HTML, CSS, and JavaScript. No frameworks, no build step
 
@@ -25,7 +25,10 @@ Almost everything lives in **`assets/content.js`**:
 | A comic or artwork | Put it in `assets/art/` plus a ~640px copy in `assets/art/thumbs/`, then list it in `assets/art.js` |
 | A caption under a piece | Edit `caption` for that piece in `assets/art.js`, or give one page its own `{ file, caption }` |
 | Photos or a video under a project | Put them in `assets/projects/` and add `{ type: "image" or "video", src, caption }` to that project's `media` |
-| Your resume | Drop the PDF in `assets/` and set `resume` |
+| A data-flow diagram for a project | Add `flow: [{ label, items }]` to that project (shown when it has no screens or media) |
+| A "why" line for a project | Set `why` on that project: who it was for and what you decided because of them |
+| The bio or highlights at the top | Edit `bio` and `highlights` |
+| Your resume | Drop the PDF in `assets/` and set `resume`; every resume link then opens the PDF directly |
 
 `lens` tags (`ds`, `swe`, `pm`) decide what lights up for each role.
 
