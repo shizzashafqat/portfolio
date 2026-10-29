@@ -116,7 +116,7 @@ window.CONTENT = {
       title: "Token Dashboard",
       kind: "Usage analytics for Denison AI",
       lens: ["ds", "swe", "pm"],
-      blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI, so the university can actually see who is using AI, how, and what it costs.",
+      blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI, so the university can actually see how many people use AI, how they use it, and what it costs.",
       stack: ["JavaScript", "Data pipelines", "APIs"],
       stat: "100M+ tokens/mo",
       shipped: "product shipped · can't share the link",
