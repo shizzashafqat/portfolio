@@ -3,9 +3,9 @@
 //
 //  Add a link:    add { label, href } to a project's or job's `links`.
 //  Add a course:  add it to `about.courses`.
-//  Project visual: a project shows its `screens` (phone shots), its `media`
-//                  (photos/video, files in assets/projects/), or a `flow` diagram
-//                  (sources → pipeline → output). With none of them, nothing is shown.
+//  Project visual: a project shows its `screens` (phone shots) or its `media`
+//                  (photos/video, files in assets/projects/). With neither, set
+//                  `shipped` to a short note and it shows that with a paper plane.
 //  Project "why": an optional `why` line on a project says who it was for and what
 //                  you decided because of them. It shows under the blurb.
 //
@@ -16,10 +16,10 @@
 window.CONTENT = {
   name: "Shizza Fatima Shafqat",
   short: "Shizza",
-  email: "shafqa_s1@denison.edu",
+  email: "shizzafshafqat@gmail.com",
   linkedin: "https://linkedin.com/in/shizza-shafqat",
   github: "https://github.com/shizzashafqat",
-  resume: "", // e.g. "assets/shizza-shafqat-resume.pdf"
+  resume: "assets/shizza-shafqat-resume.pdf",
   availability: "full-time, starting June 2027",
 
   // The short first-person bio at the top of the page
@@ -119,12 +119,7 @@ window.CONTENT = {
       blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI, so the university can actually see who is using AI, how, and what it costs.",
       stack: ["JavaScript", "Data pipelines", "APIs"],
       stat: "100M+ tokens/mo",
-      // Shown as a simple data-flow diagram until there's a screenshot to share
-      flow: [
-        { label: "sources", items: ["Anthropic usage", "OpenAI usage"] },
-        { label: "pipeline", items: ["automated pull", "usage + cost totals"] },
-        { label: "dashboard", items: ["adoption", "usage trends", "costs"] },
-      ],
+      shipped: "product shipped · can't share the link",
       // why: "", // who it's for, what they told you, what you chose to leave out
       links: [],
     },
@@ -135,11 +130,7 @@ window.CONTENT = {
       blurb: "A Node.js matching system with ranked preferences, capacity limits, and graceful fallbacks, glued to Airtable, Sheets, Tally, and Slack. It runs every summer cohort of 200+ students.",
       stack: ["Node.js", "Webhooks", "Airtable", "Slack API"],
       stat: "4–6 hrs/week saved",
-      flow: [
-        { label: "intake", items: ["Tally forms", "Airtable", "Google Sheets"] },
-        { label: "matcher", items: ["ranked preferences", "capacity limits", "fallbacks"] },
-        { label: "out", items: ["Slack", "Airtable"] },
-      ],
+      shipped: "product shipped · can't share the link",
       // why: "",
       links: [],
     },
