@@ -120,7 +120,7 @@ window.CONTENT = {
       stack: ["JavaScript", "Data pipelines", "APIs"],
       stat: "100M+ tokens/mo",
       shipped: "product shipped · can't share the link",
-      // why: "", // who it's for, what they told you, what you chose to leave out
+      why: "Built for the administrators who run Denison's AI program, so they can see where AI funding goes, how much the college spends on tokens, and who is using them.",
       links: [],
     },
     {
@@ -131,7 +131,7 @@ window.CONTENT = {
       stack: ["Node.js", "Webhooks", "Airtable", "Slack API"],
       stat: "4–6 hrs/week saved",
       shipped: "product shipped · can't share the link",
-      // why: "",
+      why: "Matching mentees to mentors by hand from their ranked preferences cost the team hours every week. I turned it into one click, with each mentor capped at 7 mentees.",
       links: [],
     },
     {
@@ -148,6 +148,7 @@ window.CONTENT = {
         { src: "assets/projects/hotwheels-3-confidence.webp", caption: "explain · how the confidence score works" },
         { src: "assets/projects/hotwheels-4-collection.webp", caption: "collect · saved car with AI-generated art" },
       ],
+      why: "Built for my older brother, whose collection is so big he couldn't remember which cars he already owned while out shopping. Now he can identify a car on the spot and check it against his collection.",
       links: [{ label: "code", href: "https://github.com/shizzashafqat/Hotwheel-Reader-Project" }],
     },
     {
@@ -162,13 +163,14 @@ window.CONTENT = {
         { type: "video", src: "assets/projects/sirkap-welcome.mp4", webm: "assets/projects/sirkap-welcome.webm", poster: "assets/projects/sirkap-welcome-poster.webp", caption: "welcome to sirkap · ai-generated flythrough of the reconstruction" },
         { type: "image", src: "assets/projects/sirkap-research.webp", caption: "presenting the research · re-imagining sirkap" },
       ],
+      why: "I lived in Taxila without knowing how significant the ruins next door were. Sirkap is barely excavated for lack of funding and barely documented online, so I used AI to make it accessible to the public.",
       links: [{ label: "explore the reconstruction", href: "https://storymaps.arcgis.com/stories/f3ba75d75b484183b4a199fbe45e07e7" }],
     },
     {
       title: "The Soul of Qawwali",
       kind: "Digital humanities research · Sufism",
       lens: ["ds", "pm"],
-      blurb: "How did qawwali move from a Sufi shrine to Coke Studio, wedding stages, and Spotify, and what does that change for how younger Pakistanis understand Sufism? I traced it from the shrine and sama' through radio, studio, and global playlists, and argue that it adapted rather than lost its soul. The site pairs the research with AI-generated scenes. It grew out of my paper on how Sufi poets, a Coke Studio qawwali, and my family's oral telling each reshape the tale of Heer Ranjha.",
+      blurb: "How did qawwali move from a Sufi shrine to Coke Studio, wedding stages, and Spotify, and what does that change for how younger Pakistanis understand Sufism? I traced it from the shrine and sama' through radio, studio, and global playlists, and argue that it adapted rather than lost its soul. The site pairs the research with AI-generated scenes.",
       stack: ["Research", "Digital Humanities", "Generative AI", "Storytelling"],
       stat: "shrine → playlist",
       media: [
@@ -176,9 +178,9 @@ window.CONTENT = {
         { type: "image", src: "assets/projects/qawwali-slide-title.webp", caption: "the soul of qawwali · from sacred ritual to global anthem" },
         { type: "image", src: "assets/projects/qawwali-slide-question.webp", caption: "the research question" },
       ],
+      why: "Few recordings show the ritual as it happens at shrines, and the tradition is fading in my generation. I built this from my parents' and grandparents' accounts so people my age can experience it and see how it became the music we stream today.",
       links: [
         { label: "visit the site", href: "https://shizzashafqat.github.io/sufism2/" },
-        { label: "read the heer ranjha paper (pdf)", href: "assets/projects/heer-ranjha-paper.pdf" },
       ],
     },
     {
@@ -191,6 +193,7 @@ window.CONTENT = {
       media: [
         { type: "image", src: "assets/projects/urdu-vowels-poster.webp", caption: "research poster · click to read it full size" },
       ],
+      why: "Research on Urdu phonetics is hard to find, so I brought it to Denison, and learned more about my own language along the way.",
       links: [],
     },
   ],

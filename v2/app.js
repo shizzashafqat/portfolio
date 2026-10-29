@@ -333,7 +333,7 @@ function Visual({ p, openLb }) {
           ${shots.map((s, k) => html`
             <button key=${s.src} onClick=${() => openLb(items, k)} aria-label=${"Open " + s.caption}
                     className="group relative overflow-hidden rounded-[10px] border border-line bg-ink">
-              <img src=${u(s.src)} alt=${p.title + ": " + s.caption} decoding="async"
+              <img src=${u(s.src)} alt=${p.title + ": " + s.caption}
                    className="aspect-[9/19.5] w-full object-cover object-top transition-opacity group-hover:opacity-80" />
               <span className="absolute left-1 top-1 bg-ink/85 px-1 text-[10px] text-accent">${pad(k + 1)}</span>
             </button>`)}

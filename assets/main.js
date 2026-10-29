@@ -136,6 +136,7 @@ function render() {
         <div class="idx label"><span>${pad(i + 1)} / ${pad(C.projects.length)}</span><span>${esc(p.kind)}</span></div>
         <h3>${esc(p.title)}</h3>
         <p>${emphasize(esc(p.blurb))}</p>
+        ${p.why ? `<p class="why">${esc(p.why)}</p>` : ""}
         ${p.stat ? `<div class="metric"><span class="label">key metric</span><b>${esc(p.stat)}</b></div>` : ""}
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
         ${p.links.length ? `<div class="links">${linkList(p.links)}</div>` : ""}
