@@ -18,7 +18,11 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const u = (p) => (/^(https?:|mailto:|#|\.\.\/)/.test(p) ? p : "../" + p);
 const pad = (n) => String(n).padStart(2, "0");
 const slug = (t) => t.toLowerCase().replace(/\./g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "x";
+// Straight to the PDF when there is one, otherwise the resume tab
+const RESUME = C.resume ? u(C.resume) : "#resume";
 const LENS = { ds: "data science", swe: "software engineering", pm: "product management" };
+
+const TITLE = "Shizza Shafqat: Software / Data / Product";
 
 const TABS = [
   { id: "home", file: "01_home.tsx" },
@@ -89,78 +93,30 @@ function Head({ title, children }) {
 
 // ── 01 · home ──
 
-// The intro types itself out one line at a time, and corrects itself once
-const SKILLS = [...C.skills.languages, ...C.skills.frameworks.slice(0, 3)];
-const INTRO = [
-  "Shizza is a senior computer science major at Denison University, graduating May 2027.",
-  "Shizza is an aspiring software engineer, product manager and data scientist.",
-  "Shizza has experience at startups and on institution-level Denison projects in AI and automation.",
-  "Shizza is the president of Women in Math, Data Analytics & CS at Denison.",
-  `Shizza has skills across ${SKILLS.slice(0, -1).join(", ")} and ${SKILLS[SKILLS.length - 1]}.`,
-];
-const INTRO_TEXT = INTRO.join("\n");
-
-function useTypewriter() {
-  const [text, setText] = useState(reduceMotion ? INTRO_TEXT : "");
-  const [typing, setTyping] = useState(false);
-  const skip = useRef(null);
-  useEffect(() => {
-    if (reduceMotion) return;
-    let alive = true, cur = "";
-    skip.current = () => { alive = false; setText(INTRO_TEXT); setTyping(false); };
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    const set = (t) => { cur = t; if (alive) setText(t); };
-    const key = (ch) => 28 + Math.random() * 40 + (ch === " " ? 25 : 0) + (/[.,]/.test(ch) ? 140 : 0);
-    const type = async (s) => {
-      if (alive) setTyping(true);
-      for (const ch of s) { if (!alive) return; set(cur + ch); await sleep(key(ch)); }
-      if (alive) setTyping(false);
-    };
-    const back = async (n, ms) => {
-      if (alive) setTyping(true);
-      for (let i = 0; i < n; i++) { if (!alive) return; set(cur.slice(0, -1)); await sleep(ms); }
-    };
-    (async () => {
-      await sleep(600);
-      for (const [i, line] of INTRO.entries()) {
-        if (!alive) return;
-        if (i) set(cur + "\n");
-        if (line.includes("an aspiring")) {
-          // "amazing" first, then think better of it
-          await type("Shizza is an amazing");
-          await sleep(650); await back("amazing".length, 70); await sleep(250);
-          await type(line.slice("Shizza is an ".length));
-        } else {
-          await type(line);
-        }
-        await sleep(700);
-      }
-    })();
-    return () => { alive = false; };
-  }, []);
-  return [text, typing, text !== INTRO_TEXT && !reduceMotion ? () => skip.current?.() : null];
-}
-
-function IntroLines({ text, caret }) {
-  const lines = text.split("\n");
-  return lines.map((l, i) => html`
-    <span key=${i} className="block [&:not(:first-child)]:mt-2">
-      <span className="text-accent">${"> "}</span>${l.startsWith("Shizza") ? html`<span><span className="text-accent">Shizza</span>${l.slice(6)}</span>` : l}${i === lines.length - 1 ? caret : null}
-    </span>`);
-}
-
-function Typewriter() {
-  const [text, typing, skip] = useTypewriter();
-  const caret = html`<span className=${"ml-1 inline-block h-[0.95em] w-[0.5em] translate-y-[0.15em] bg-accent " + (typing ? "" : "caret-blink")}></span>`;
+// The bio shows in full right away; only the caret blinks
+function Intro() {
   return html`
-    <div className="mt-6">
-      <p className="sr-only">${INTRO.join(" ")}</p>
-      <div aria-hidden="true" className="grid text-lg leading-[1.55] sm:text-xl xl:text-2xl [&>*]:[grid-area:1/1]">
-        <p className="invisible"><${IntroLines} text=${INTRO_TEXT} /></p>
-        <p><${IntroLines} text=${text} caret=${caret} /></p>
-      </div>
-      ${skip ? html`<button onClick=${skip} className="mt-3 text-xs text-dim hover:text-accent">skip typing ›</button>` : null}
+    <div className="mt-6 text-lg leading-[1.55] sm:text-xl xl:text-2xl">
+      ${C.bio.map((l, i) => html`
+        <p key=${i} className="[&:not(:first-child)]:mt-2">
+          <span className="text-accent">${"> "}</span>${l}${i === C.bio.length - 1
+            ? html`<span aria-hidden="true" className="caret-blink ml-1 inline-block h-[0.95em] w-[0.5em] translate-y-[0.15em] bg-accent"></span>` : null}
+        </p>`)}
     </div>`;
+}
+
+// Three headline results, each linking to its project
+function Highlights() {
+  return html`
+    <ul aria-label="Highlights" className="mt-8 grid gap-px border border-line bg-line sm:grid-cols-3">
+      ${C.highlights.map((h) => html`
+        <li key=${h.stat} className="bg-panel">
+          <a href=${"#projects/" + slug(h.project)} className="block h-full p-4 hover:bg-raised">
+            <span className="block text-xl font-bold text-accent sm:text-2xl">${h.stat}</span>
+            <span className="mt-1 block text-xs leading-relaxed text-dim">${h.label}</span>
+          </a>
+        </li>`)}
+    </ul>`;
 }
 
 // The Swasey Chapel doodle starts in grayscale. Wherever the cursor goes, color
@@ -326,12 +282,14 @@ function GitLog() {
             <div className="mt-4 max-w-3xl border border-line bg-panel text-sm">
               ${j.impact.map((x) => html`<p key=${x} className="border-l-2 border-accent bg-accent/[0.06] px-3 py-1"><span className="text-accent">+ </span>${x}</p>`)}
             </div>
-            <details className="group mt-3 max-w-3xl text-sm">
-              <summary className="text-dim hover:text-fg"><span className="inline-block transition-transform group-open:rotate-90">›</span> details</summary>
-              <ul className="mt-2 space-y-2 border-l border-line pl-4 text-dim">
-                ${j.bullets.map((b) => html`<li key=${b.text} className="leading-relaxed">${emph(b.text)}</li>`)}
-              </ul>
-            </details>
+            <p className="mt-3 max-w-3xl border-l border-line pl-4 text-sm leading-relaxed text-dim">${emph(j.bullets[0].text)}</p>
+            ${j.bullets.length > 1 ? html`
+              <details className="group mt-3 max-w-3xl text-sm">
+                <summary className="text-dim hover:text-fg"><span className="inline-block transition-transform group-open:rotate-90">›</span> more details</summary>
+                <ul className="mt-2 space-y-2 border-l border-line pl-4 text-dim">
+                  ${j.bullets.slice(1).map((b) => html`<li key=${b.text} className="leading-relaxed">${emph(b.text)}</li>`)}
+                </ul>
+              </details>` : null}
             ${j.links.length ? html`<p className="mt-3 flex gap-4 text-sm">${j.links.map((l) => html`<${ExtLink} key=${l.href} href=${l.href}>${l.label} ↗</${ExtLink}>`)}</p>` : null}
           </li>`)}
       </ol>
@@ -341,14 +299,15 @@ function GitLog() {
 function Home() {
   return html`
     <div>
-      <section className="grid items-center gap-10 lg:min-h-[calc(100vh-140px)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-14">
+      <section className="grid items-center gap-10 lg:min-h-[calc(100vh-140px)] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:gap-14">
         <div>
           <h1 className="text-sm sm:text-base"><${K}>const</${K}> name = <${S}>${C.name}</${S}>;</h1>
-          <${Typewriter} />
+          <${Intro} />
+          <${Highlights} />
           <div className="mt-8 flex flex-wrap gap-3 text-sm">
             <a href="#projects" className="bg-accent px-4 py-2 font-medium text-ink hover:bg-fg">open projects →</a>
+            <a href=${RESUME} target=${C.resume ? "_blank" : null} rel="noopener" className="border border-line px-4 py-2 hover:border-accent">resume.pdf</a>
             <a href="#artwork" className="border border-line px-4 py-2 hover:border-accent">see artwork</a>
-            <a href="#resume" className="border border-line px-4 py-2 hover:border-accent">resume.pdf</a>
           </div>
         </div>
         <${Doodle} />
@@ -374,7 +333,7 @@ function Visual({ p, openLb }) {
           ${shots.map((s, k) => html`
             <button key=${s.src} onClick=${() => openLb(items, k)} aria-label=${"Open " + s.caption}
                     className="group relative overflow-hidden rounded-[10px] border border-line bg-ink">
-              <img src=${u(s.src)} alt=${p.title + ": " + s.caption} loading="lazy"
+              <img src=${u(s.src)} alt=${p.title + ": " + s.caption} decoding="async"
                    className="aspect-[9/19.5] w-full object-cover object-top transition-opacity group-hover:opacity-80" />
               <span className="absolute left-1 top-1 bg-ink/85 px-1 text-[10px] text-accent">${pad(k + 1)}</span>
             </button>`)}
@@ -408,14 +367,29 @@ function Visual({ p, openLb }) {
         </div>
       </div>`;
   }
-  return html`
-    <div className="relative grid aspect-video place-items-center border border-dashed border-line text-sm text-dim" role="img" aria-label="No image yet">
-      <svg viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true" className="absolute inset-0 h-full w-full stroke-line">
-        <path d="M0 0 L100 56 M100 0 L0 56" vectorEffect="non-scaling-stroke" />
-      </svg>
-      <span className="relative bg-panel px-2">${"// TODO: screenshots"}</span>
-    </div>`;
+  if (p.flow) return html`<${Flow} p=${p} />`;
+  return null;
 }
+
+// sources → pipeline → output, as boxes in a row (a column on phones)
+function Flow({ p }) {
+  return html`
+    <figure>
+      <ol aria-label=${p.title + " data flow"} className="flex flex-col items-stretch gap-2 text-sm sm:flex-row sm:items-center">
+        ${p.flow.map((step, k) => html`
+          <${React.Fragment} key=${step.label}>
+            ${k ? html`<li aria-hidden="true" className="text-center text-accent"><span className="sm:hidden">↓</span><span className="hidden sm:inline">→</span></li>` : null}
+            <li className="flex-1 border border-line bg-ink p-3">
+              <p className="text-xs text-accent">${pad(k + 1)} · ${step.label}</p>
+              <ul className="mt-2 space-y-0.5 text-dim">${step.items.map((x) => html`<li key=${x}>${x}</li>`)}</ul>
+            </li>
+          <//>`)}
+      </ol>
+      <figcaption className="mt-3 text-xs text-dim">${"// how the data moves"}</figcaption>
+    </figure>`;
+}
+
+const hasVisual = (p) => (p.screens || []).length || (p.media || []).length || p.flow;
 
 function ProjectCard({ p, i, openLb }) {
   const s = slug(p.title);
@@ -426,12 +400,13 @@ function ProjectCard({ p, i, openLb }) {
         <span className="truncate">projects/${s}/<span className="text-fg">README.md</span></span>
         <span className="shrink-0 tabular-nums">${pad(i + 1)} / ${pad(C.projects.length)}</span>
       </div>
-      <div className="grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <div className="border-b border-line p-4 sm:p-5 xl:border-b-0 xl:border-r"><${Visual} p=${p} openLb=${openLb} /></div>
+      <div className=${"grid " + (hasVisual(p) ? "xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" : "")}>
+        ${hasVisual(p) ? html`<div className="border-b border-line p-4 sm:p-5 xl:border-b-0 xl:border-r"><${Visual} p=${p} openLb=${openLb} /></div>` : null}
         <div className="p-5 sm:p-6">
           <p className="text-xs text-dim">${"> " + p.kind}</p>
           <h3 className="mt-2 text-xl font-bold sm:text-2xl"><span className="text-accent"># </span>${p.title}</h3>
           <p className="mt-4 text-sm leading-relaxed">${emph(p.blurb)}</p>
+          ${p.why ? html`<p className="mt-3 text-sm leading-relaxed text-dim">${"// why: "}${p.why}</p>` : null}
           ${p.stat ? html`
             <div className="mt-5 border border-line bg-ink text-sm">
               ${after ? html`<p className="px-3 py-1 text-dim">- <span className="line-through decoration-faint">${before}</span></p>` : null}
@@ -610,12 +585,12 @@ function Contact() {
     ["email", C.email, `mailto:${C.email}`],
     ["linkedin", C.linkedin.replace(/^https?:\/\//, ""), C.linkedin],
     ["github", C.github.replace(/^https?:\/\//, ""), C.github],
-    ["resume", "06_resume.pdf", "#resume"],
+    ["resume", C.resume ? "resume.pdf" : "06_resume.pdf", RESUME],
   ];
   return html`
     <div className="flex min-h-[60vh] flex-col justify-center">
       <h2 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">Let's build<br />something<span className="text-accent">.</span></h2>
-      <p className="mt-5 max-w-xl leading-relaxed text-dim">Open to data science, software engineering, and product roles for 2027.</p>
+      <p className="mt-5 max-w-xl leading-relaxed text-dim">Open to data science, software engineering, and product roles: ${C.availability}.</p>
       <div className="mt-10 max-w-2xl border border-line bg-panel text-sm">
         ${rows.map(([k, label, href]) => html`
           <div key=${k} className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-line px-4 py-3 last:border-b-0">
@@ -767,7 +742,7 @@ function StatusBar() {
   return html`
     <footer className="fixed inset-x-0 bottom-0 z-40 flex h-7 items-center gap-4 border-t border-line bg-panel px-3 text-[11px] text-dim">
       <span><span className="text-accent">⎇</span> main</span>
-      <span className="ml-auto flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-accent"></span>open to 2027 roles</span>
+      <span className="ml-auto flex items-center gap-1.5 whitespace-nowrap"><span className="h-1.5 w-1.5 rounded-full bg-accent"></span><span className="hidden sm:inline">open to roles ·</span> ${C.availability}</span>
       <span className="hidden tabular-nums sm:inline">granville ${time}</span>
     </footer>`;
 }
@@ -806,7 +781,7 @@ function App() {
   // Jump to a project or artwork when the hash names one, otherwise start at the top
   useEffect(() => {
     const t = TABS.find((x) => x.id === route.tab);
-    document.title = `${t.file} · Shizza Shafqat`;
+    document.title = t.id === "home" ? TITLE : `${t.file.replace(/^\d+_|\.\w+$/g, "").replace(/_/g, " ")} · ${TITLE}`;
     const el = route.sub && document.getElementById((route.tab === "artwork" ? "a-" : "p-") + route.sub);
     if (el) el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
     else scrollTo(0, 0);

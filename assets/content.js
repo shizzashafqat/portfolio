@@ -3,8 +3,11 @@
 //
 //  Add a link:    add { label, href } to a project's or job's `links`.
 //  Add a course:  add it to `about.courses`.
-//  Project visual: a project shows its `screens` (phone shots) or its `media`
-//                  (photos/video, files in assets/projects/). With neither, it shows "no image".
+//  Project visual: a project shows its `screens` (phone shots), its `media`
+//                  (photos/video, files in assets/projects/), or a `flow` diagram
+//                  (sources → pipeline → output). With none of them, nothing is shown.
+//  Project "why": an optional `why` line on a project says who it was for and what
+//                  you decided because of them. It shows under the blurb.
 //
 //  `lens` tags decide which roles a job or project belongs to:
 //  "ds" data science, "swe" software engineering, "pm" product management.
@@ -17,6 +20,20 @@ window.CONTENT = {
   linkedin: "https://linkedin.com/in/shizza-shafqat",
   github: "https://github.com/shizzashafqat",
   resume: "", // e.g. "assets/shizza-shafqat-resume.pdf"
+  availability: "full-time, starting June 2027",
+
+  // The short first-person bio at the top of the page
+  bio: [
+    "CS senior at Denison (May '27).",
+    "I build AI tools people actually use: campus-wide token analytics, mentor matching for 200+ students, an iOS car-recognition app.",
+  ],
+
+  // Three results shown near the top. `project` links to that project.
+  highlights: [
+    { stat: "100M+", label: "tokens a month tracked across Anthropic + OpenAI", project: "Token Dashboard" },
+    { stat: "72% → 91%", label: "car-recognition accuracy on a 100-image eval set", project: "Hot Wheels Garage" },
+    { stat: "200+", label: "students matched with mentors each cohort", project: "Mentor Matcher" },
+  ],
 
   // The "about" block at the top of the page
   about: {
@@ -72,7 +89,7 @@ window.CONTENT = {
       where: "Seattle, WA",
       lens: ["swe", "pm"],
       summary: "I automated how a startup matches each summer cohort of students with mentors: a Node.js engine that respects everyone's preferences and limits, wired into the tools the team already used.",
-      impact: ["200+ students per cohort", "4–6 hrs/week saved", "0 double bookings"],
+      impact: ["4–6 hrs/week saved", "200+ students per cohort", "0 double bookings"],
       bullets: [
         { text: "Built and deployed a Node.js mentor-matching system with ranked preferences, capacity constraints, and fallback logic, wired into Airtable, Sheets, Tally, and Slack via APIs and webhooks.", lens: ["swe"] },
         { text: "Partnered with the CEO on intake, matching, and scheduling for 200+ student cohorts, saving staff 4–6 hours a week with zero double bookings.", lens: ["pm"] },
@@ -95,6 +112,37 @@ window.CONTENT = {
   ],
 
   projects: [
+    {
+      title: "Token Dashboard",
+      kind: "Usage analytics for Denison AI",
+      lens: ["ds", "swe", "pm"],
+      blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI, so the university can actually see who is using AI, how, and what it costs.",
+      stack: ["JavaScript", "Data pipelines", "APIs"],
+      stat: "100M+ tokens/mo",
+      // Shown as a simple data-flow diagram until there's a screenshot to share
+      flow: [
+        { label: "sources", items: ["Anthropic usage", "OpenAI usage"] },
+        { label: "pipeline", items: ["automated pull", "usage + cost totals"] },
+        { label: "dashboard", items: ["adoption", "usage trends", "costs"] },
+      ],
+      // why: "", // who it's for, what they told you, what you chose to leave out
+      links: [],
+    },
+    {
+      title: "Mentor Matcher",
+      kind: "Matching engine at HeyPossible",
+      lens: ["swe", "pm"],
+      blurb: "A Node.js matching system with ranked preferences, capacity limits, and graceful fallbacks, glued to Airtable, Sheets, Tally, and Slack. It runs every summer cohort of 200+ students.",
+      stack: ["Node.js", "Webhooks", "Airtable", "Slack API"],
+      stat: "4–6 hrs/week saved",
+      flow: [
+        { label: "intake", items: ["Tally forms", "Airtable", "Google Sheets"] },
+        { label: "matcher", items: ["ranked preferences", "capacity limits", "fallbacks"] },
+        { label: "out", items: ["Slack", "Airtable"] },
+      ],
+      // why: "",
+      links: [],
+    },
     {
       title: "Hot Wheels Garage",
       kind: "iOS visual recognition app",
@@ -152,24 +200,6 @@ window.CONTENT = {
       media: [
         { type: "image", src: "assets/projects/urdu-vowels-poster.webp", caption: "research poster · click to read it full size" },
       ],
-      links: [],
-    },
-    {
-      title: "Token Dashboard",
-      kind: "Usage analytics for Denison AI",
-      lens: ["ds", "swe", "pm"],
-      blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI, so the university can actually see who is using AI, how, and what it costs.",
-      stack: ["JavaScript", "Data pipelines", "APIs"],
-      stat: "100M+ tokens/mo",
-      links: [],
-    },
-    {
-      title: "Mentor Matcher",
-      kind: "Matching engine at HeyPossible",
-      lens: ["swe", "pm"],
-      blurb: "A Node.js matching system with ranked preferences, capacity limits, and graceful fallbacks, glued to Airtable, Sheets, Tally, and Slack. It runs every summer cohort of 200+ students.",
-      stack: ["Node.js", "Webhooks", "Airtable", "Slack API"],
-      stat: "0 double bookings",
       links: [],
     },
   ],

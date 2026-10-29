@@ -229,6 +229,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .vis.stack-media .video .tag { pointer-events: none; }
 
 /* nothing to show yet */
+.vis.flow { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); font-size: .8rem; }
+.vis.flow li { background: var(--bg); padding: 1rem; display: grid; align-content: start; gap: .2rem; color: var(--muted); }
+.vis.flow li b { color: var(--ink); font-weight: 500; margin-bottom: .35rem; }
+.vis.flow li + li b::before { content: "→ "; }
+@media (max-width: 640px) { .vis.flow { grid-template-columns: 1fr; } .vis.flow li + li b::before { content: "↓ "; } }
 .vis.empty { aspect-ratio: 4 / 3; display: grid; place-items: center; border-style: dashed; border-color: var(--muted); }
 .vis.empty svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .vis.empty path { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; fill: none; }
