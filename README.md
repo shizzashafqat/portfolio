@@ -2,16 +2,16 @@
 
 A hand-drawn, interactive portfolio: CS at Denison University, building AI, software, and products, and drawing all of it.
 
-Live at **https://shizzashafqat.github.io/portfolio**
+Live at **https://shizzashafqat.github.io/portfolio/v2/** (the root URL redirects there)
 
 ## What's inside
 
-- A minimal, monochrome, terminal-flavored layout; my Denison doodle colors in under your cursor
-- An about.txt block at the top; pick a role (data science / software engineering / product management) to see the projects for it
-- Single-line drawings that draw themselves on scroll: a New York skyline and Denison
+- A code-editor themed site in `v2/`: tabs for home, projects, artwork, At Denison, and contact (keys 1 to 5 switch tabs)
+- Pick a role (data science / software engineering / product management) to see the projects for it
 - Each project shows real screens, photos or video, or, for shipped work that can't be shown, a note and a paper plane taking off
-- An art page (`art.html`) with every page of every piece laid out big, caption space under each page and piece, and a full-screen reader (arrow keys and swipe)
-- Plain HTML, CSS, and JavaScript. No frameworks, no build step
+- An artwork tab with every page of every piece and a full-screen reader (arrow keys and swipe)
+- React + htm vendored in `v2/vendor/`, styled with Tailwind (rebuild `v2/tailwind.css` with the command in `v2/tailwind.config.js` after changing classes)
+- The root `index.html` and `art.html` only redirect to `v2/`, so old links keep working
 
 ## Updating the site
 
@@ -38,5 +38,5 @@ Almost everything lives in **`assets/content.js`**:
 
 ```sh
 python3 -m http.server 8000
-# then open http://localhost:8000
+# then open http://localhost:8000/v2/
 ```

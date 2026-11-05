@@ -2,8 +2,8 @@
 //  v2 · the code-editor portfolio.
 //
 //  All the words, projects and pictures come from ../assets/content.js and
-//  ../assets/art.js, the same files the classic site reads, so editing those
-//  updates both designs. This file only decides how it all looks.
+//  ../assets/art.js, so edit those to change content. This file only
+//  decides how it all looks.
 //
 //  Styling is Tailwind. After changing classes here, rebuild tailwind.css
 //  (the command is at the top of tailwind.config.js).
@@ -796,7 +796,7 @@ function App() {
             <${Page} openLb=${openLb} />
           </div>
           <p className="mx-auto max-w-[1400px] px-4 pb-10 text-xs text-faint sm:px-8 lg:px-12">
-            ${"// © " + new Date().getFullYear() + " shizza fatima shafqat · drawn + coded by hand · "}<a href="../" className="underline underline-offset-4 hover:text-dim">classic version</a>
+            ${"// © " + new Date().getFullYear() + " shizza fatima shafqat · drawn + coded by hand"}
           </p>
         </main>
       </div>
