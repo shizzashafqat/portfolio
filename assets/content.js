@@ -201,10 +201,24 @@ window.CONTENT = {
     },
   ],
 
+  // An honor shown on the home page and, in full, under "At Denison".
+  // `poster` is the PDF; `posterImage` is a preview of it.
+  fellowship: {
+    title: "Computer Science Department Fellow",
+    term: "2026–27",
+    blurb: "An honor recognizing Computer Science majors for academic strength and service to the department.",
+    duties: [
+      "Organize at least two department events each semester to build community among CS majors",
+      "Represent the department to visiting speakers and faculty candidates",
+    ],
+    poster: "assets/fellow/cs-fellow-poster.pdf",
+    posterImage: "assets/fellow/cs-fellow-poster.webp",
+  },
+
   leadership: [
     { title: "AI Policy Committee", note: "Student rep (1 of 2) advising Denison's campus-wide AI guidelines", lens: ["pm"] },
     { title: "Women in Math, Data Analytics & CS", note: "President", lens: ["pm", "ds", "swe"] },
-    { title: "CS Department Fellow", note: "1 of 4", lens: ["swe"] },
+    { title: "CS Department Fellow", note: "2026–27 · 1 of 4", lens: ["swe"] },
     { title: "Knowlton Center", note: "Tech & Data Science Peer Career Fellow", lens: ["pm", "ds"] },
   ],
   leadershipSummary: "60+ campus events with speakers, faculty, and alumni · $10K+ in budgets managed",

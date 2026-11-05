@@ -119,6 +119,18 @@ function Highlights() {
     </ul>`;
 }
 
+// One honor, a single line under the highlights, linking to its entry in At Denison
+function FellowBadge() {
+  const F = C.fellowship;
+  if (!F) return null;
+  return html`
+    <a href="#denison/fellow" className="group mt-3 flex items-center gap-3 border border-line bg-panel px-4 py-3 text-sm hover:border-accent hover:bg-raised">
+      <span className="shrink-0 border border-accent/60 px-1.5 py-px text-[11px] uppercase tracking-wider text-accent">honor</span>
+      <span className="min-w-0 flex-1 leading-snug"><b className="font-bold">${F.title}</b><span className="text-dim"> · ${F.term}</span></span>
+      <span className="hidden shrink-0 text-xs text-dim group-hover:text-accent sm:inline">see poster →</span>
+    </a>`;
+}
+
 // The Swasey Chapel doodle starts in grayscale. Wherever the cursor goes, color
 // is painted in and stays, until the whole drawing is in color.
 const DOODLE = u(C.doodles[0].src);
@@ -304,6 +316,7 @@ function Home() {
           <h1 className="text-sm sm:text-base"><${K}>const</${K}> name = <${S}>${C.name}</${S}>;</h1>
           <${Intro} />
           <${Highlights} />
+          <${FellowBadge} />
           <div className="mt-8 flex flex-wrap gap-3 text-sm">
             <a href="#projects" className="bg-accent px-4 py-2 font-medium text-ink hover:bg-fg">open projects →</a>
             <a href=${RESUME} target=${C.resume ? "_blank" : null} rel="noopener" className="border border-line px-4 py-2 hover:border-accent">resume.pdf</a>
@@ -508,6 +521,34 @@ function Chapel() {
     </svg>`;
 }
 
+// The department fellowship: what it is, what I do, and the poster (PDF + preview)
+function Fellowship() {
+  const F = C.fellowship;
+  if (!F) return null;
+  return html`
+    <section id="d-fellow" className="mt-16 scroll-mt-16">
+      <h3 className="text-sm text-dim"><span className="text-accent">##</span> honors</h3>
+      <div className="mt-5 grid border border-line bg-panel sm:grid-cols-[minmax(0,1fr)_minmax(0,240px)]">
+        <div className="p-5 sm:p-6">
+          <p className="text-xs text-dim">fellowship.md · ${F.term}</p>
+          <h4 className="mt-3 text-xl font-bold leading-snug sm:text-2xl">${F.title}</h4>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-dim">${F.blurb}</p>
+          <p className="mt-6 text-xs text-dim"><span className="text-accent">###</span> what I do</p>
+          <ul className="mt-2 max-w-xl space-y-2 text-sm leading-relaxed">
+            ${F.duties.map((d) => html`<li key=${d} className="flex gap-2"><span aria-hidden="true" className="text-accent">-</span><span>${emph(d)}</span></li>`)}
+          </ul>
+          ${F.poster ? html`<p className="mt-6 text-sm"><${ExtLink} href=${F.poster}>open the poster (pdf) ↗</${ExtLink}></p>` : null}
+        </div>
+        ${F.posterImage ? html`
+          <a href=${u(F.poster || F.posterImage)} target="_blank" rel="noopener"
+             className="block border-t border-line p-4 sm:border-l sm:border-t-0">
+            <img src=${u(F.posterImage)} alt=${"Shizza's " + F.title + " poster from the Denison CS department"} loading="lazy"
+                 className="mx-auto w-full max-w-[240px] border border-line transition-colors hover:border-accent" />
+          </a>` : null}
+      </div>
+    </section>`;
+}
+
 function Denison() {
   const A = C.about;
   const campusJobs = C.experience.filter((j) => j.org === "Denison University");
@@ -535,6 +576,8 @@ function Denison() {
           </div>
         </div>
       </section>
+
+      <${Fellowship} />
 
       <section className="mt-16">
         <h3 className="text-sm text-dim"><span className="text-accent">##</span> leadership, teaching & coaching</h3>
@@ -775,7 +818,8 @@ function App() {
   useEffect(() => {
     const t = TABS.find((x) => x.id === route.tab);
     document.title = t.id === "home" ? TITLE : `${t.file.replace(/^\d+_|\.\w+$/g, "").replace(/_/g, " ")} · ${TITLE}`;
-    const el = route.sub && document.getElementById((route.tab === "artwork" ? "a-" : "p-") + route.sub);
+    const prefix = { artwork: "a-", projects: "p-", denison: "d-" }[route.tab];
+    const el = route.sub && prefix && document.getElementById(prefix + route.sub);
     if (el) el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
     else scrollTo(0, 0);
   }, [route]);
