@@ -14,6 +14,12 @@
 
 window.ART = [
   {
+    title: "WiNI",
+    kind: "logo · digital",
+    caption: "The logo I drew for WiNI, my CS club. Instead of one icon, I packed the circle with the hand-drawn doodles of what we actually do: a linked list, a binary tree, weighted graphs, a Venn diagram, bar and line charts, a laptop running C++, a calculator, the quadratic formula, pi, music notes, and a ladybug for the bugs we fix. The name sits on a single line through the middle like a number line, and the pink and maroon rings hold it all together.",
+    pages: ["wini-logo"],
+  },
+  {
     title: "Shadi",
     kind: "comic · color",
     caption: "The story of my brother Usama's wedding in Islamabad, from the invitation to the last page.",
@@ -61,12 +67,6 @@ window.ART = [
     kind: "marker · chalk",
     caption: "",
     pages: ["girls-in-tech-1", "girls-in-tech-2", "girls-in-tech-3"],
-  },
-  {
-    title: "WiNI",
-    kind: "logo · digital",
-    caption: "The logo I drew for WiNI, my CS club. Instead of one icon, I packed the circle with the hand-drawn doodles of what we actually do: a linked list, a binary tree, weighted graphs, a Venn diagram, bar and line charts, a laptop running C++, a calculator, the quadratic formula, pi, music notes, and a ladybug for the bugs we fix. The name sits on a single line through the middle like a number line, and the pink and maroon rings hold it all together.",
-    pages: ["wini-logo"],
   },
   {
     title: "C.O.A.T.",
