@@ -63,6 +63,12 @@ window.ART = [
     pages: ["girls-in-tech-1", "girls-in-tech-2", "girls-in-tech-3"],
   },
   {
+    title: "WiNI",
+    kind: "logo · digital",
+    caption: "The logo I drew for WiNI, my CS club. Instead of one icon, I packed the circle with the hand-drawn doodles of what we actually do: a linked list, a binary tree, weighted graphs, a Venn diagram, bar and line charts, a laptop running C++, a calculator, the quadratic formula, pi, music notes, and a ladybug for the bugs we fix. The name sits on a single line through the middle like a number line, and the pink and maroon rings hold it all together.",
+    pages: ["wini-logo"],
+  },
+  {
     title: "C.O.A.T.",
     kind: "paper doll · marker",
     caption: "",
