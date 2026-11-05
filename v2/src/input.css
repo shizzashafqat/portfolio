@@ -62,12 +62,3 @@
     .plane { animation: none; transform: translate(4.5rem, 0); }
   }
 }
-
-/* Printing the resume tab prints only the paper */
-@media print {
-  html, body { background: #fff !important; }
-  body * { visibility: hidden; }
-  #paper, #paper * { visibility: visible; }
-  #paper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; border: 0; box-shadow: none; padding: 0; }
-  @page { margin: 12mm; }
-}
