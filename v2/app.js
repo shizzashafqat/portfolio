@@ -620,8 +620,21 @@ function Contact() {
     ["github", C.github.replace(/^https?:\/\//, ""), C.github],
     ...(C.resume ? [["resume", "resume.pdf", u(C.resume)]] : []),
   ];
+  const photo = C.photo ? html`
+    <figure className="group w-full max-w-[220px] shrink-0 border border-line bg-panel text-xs sm:max-w-[260px] lg:max-w-[300px]">
+      <div className="flex items-center gap-2 border-b border-line px-3 py-1.5 text-dim">
+        <span className="text-accent">●</span><span className="truncate text-fg">${C.photo.src.split("/").pop().replace(/-\d+(?=\.)/, "")}</span>
+      </div>
+      <img src=${u(C.photo.src)} srcSet=${C.photo.small ? `${u(C.photo.small)} 480w, ${u(C.photo.src)} 900w` : null}
+        sizes="(max-width: 640px) 220px, 300px" width="900" height="1125" alt=${C.photo.alt} loading="lazy" decoding="async"
+        className="block aspect-[4/5] w-full object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0 [@media(hover:none)]:grayscale-0" />
+      <figcaption className="flex justify-between border-t border-line px-3 py-1.5 text-faint">
+        <span>// me</span><span className="[@media(hover:none)]:hidden">hover → color</span>
+      </figcaption>
+    </figure>` : null;
   return html`
-    <div className="flex min-h-[60vh] flex-col justify-center">
+    <div className="flex min-h-[60vh] flex-col-reverse gap-10 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex min-w-0 flex-col justify-center">
       <h2 className="text-4xl font-bold leading-[1.1] tracking-tight sm:text-6xl">Let's build<br />something<span className="text-accent">.</span></h2>
       <p className="mt-5 max-w-xl leading-relaxed text-dim">Open to data science, software engineering, and product roles: ${C.availability}.</p>
       <div className="mt-10 max-w-2xl border border-line bg-panel text-sm">
@@ -632,6 +645,8 @@ function Contact() {
             ${k === "email" ? html`<button onClick=${copy} className="ml-auto border border-line px-2 py-0.5 text-xs text-dim hover:border-accent hover:text-fg">${copied ? "copied ✓" : "copy"}</button>` : null}
           </div>`)}
       </div>
+    </div>
+    ${photo}
     </div>`;
 }
 

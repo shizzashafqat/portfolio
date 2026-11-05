@@ -185,6 +185,18 @@ function render() {
   if (C.resume) links.push({ label: "resume.pdf", href: C.resume });
   $("#contactLinks").innerHTML = links.map((l) => `<a href="${esc(l.href)}" target="_blank" rel="noopener">${l.label} ↗</a>`).join("");
 
+  if (C.photo) {
+    const fig = $("#contactPhoto");
+    const img = fig.querySelector("img");
+    img.src = C.photo.src;
+    if (C.photo.small) {
+      img.srcset = `${C.photo.small} 480w, ${C.photo.src} 900w`;
+      img.sizes = "(max-width: 900px) 260px, 340px";
+    }
+    img.alt = C.photo.alt;
+    fig.hidden = false;
+  }
+
   $("#year").textContent = new Date().getFullYear();
 }
 
