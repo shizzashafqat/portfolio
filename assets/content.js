@@ -199,6 +199,26 @@ window.CONTENT = {
       why: "Research on Urdu phonetics is hard to find, so I brought it to Denison, and learned more about my own language along the way.",
       links: [],
     },
+    {
+      title: "Photogrammetry for Virtual Roman Retail",
+      kind: "3D modeling · AGRS 351 / DH 215",
+      lens: ["ds"],
+      blurb: "As a student in AGRS 351 / DH 215, I contributed to the Virtual Roman Retail project. I built a 3D model of a stone bench from Ostia in Agisoft Metashape: 292 of 295 photos aligned into a 29.3M-point cloud and a 1.1M-face mesh. In the same class we also 3D modeled a Pokémon figurine. I'm now a TA for the course.",
+      stack: ["Agisoft Metashape", "Photogrammetry", "3D modeling", "Digital Humanities"],
+      stat: "29.3M points",
+      media: [
+        { type: "image", wide: true, src: "assets/projects/vrr-bench-metashape.webp", caption: "the bench in agisoft metashape · dense point cloud built from the aligned photos", alt: "Agisoft Metashape on a lab monitor showing a blue point cloud of a stone bench, with the workspace panel listing 295 images and a 29,302,191-point cloud, and a strip of the source photos below" },
+        { type: "image", tall: true, src: "assets/projects/vrr-bench-model.webp", caption: "the finished bench model", alt: "A lab monitor showing the finished grey 3D model of the stone bench: a flat slab top resting on two carved supports" },
+        { type: "image", tall: true, src: "assets/projects/vrr-eevee-scan.webp", caption: "the pokémon figurine we 3D modeled in class", alt: "A 3D photogrammetry model of a small Eevee Pokémon figurine on a speckled white surface, with source photo thumbnails along the bottom" },
+      ],
+      credit: {
+        label: "credit · as Dr. Rhodora Vennarucci asked it to read",
+        text: "Virtual Roman Retail project, directed by Rhodora Vennarucci, Assistant Professor of Ancient Greek and Roman Studies at Denison University.",
+        href: "https://vrr.uark.edu",
+        note: "Images shared with her permission.",
+      },
+      links: [{ label: "virtual roman retail", href: "https://vrr.uark.edu" }],
+    },
   ],
 
   // An honor shown on the home page and, in full, under "At Denison".
@@ -220,6 +240,7 @@ window.CONTENT = {
     { title: "Women in Math, Data Analytics & CS", note: "President", lens: ["pm", "ds", "swe"] },
     { title: "CS Department Fellow", note: "2026–27 · 1 of 4", lens: ["swe"] },
     { title: "Knowlton Center", note: "Tech & Data Science Peer Career Fellow", lens: ["pm", "ds"] },
+    { title: "Teaching Assistant", note: "AGRS 351 / DH 215 · Virtual Roman Retail", lens: ["ds"] },
   ],
   leadershipSummary: "60+ campus events with speakers, faculty, and alumni · $10K+ in budgets managed",
 
