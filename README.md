@@ -29,6 +29,7 @@ Almost everything lives in **`assets/content.js`**:
 | A "why" line for a project | Set `why` on that project: who it was for and what you decided because of them |
 | The bio or highlights at the top | Edit `bio` and `highlights` |
 | The CS Department Fellow honor (home badge + At Denison entry) | Edit `fellowship`; the poster lives in `assets/fellow/` |
+| The photo in Contact | Replace `assets/me/shizza-900.webp` (900×1125, 4:5) and the 480px copy, or point `photo` at new files |
 | Your resume | Drop the PDF in `assets/` and set `resume`; every resume link then opens the PDF directly |
 
 `lens` tags (`ds`, `swe`, `pm`) decide what lights up for each role.

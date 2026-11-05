@@ -21,6 +21,13 @@ window.CONTENT = {
   github: "https://github.com/shizzashafqat",
   resume: "assets/shizza-shafqat-resume.pdf",
   availability: "full-time, starting June 2027",
+  // Portrait in the contact section (both versions). `src` is the large copy,
+  // `small` a ~480px copy for phones. Crop to 4:5.
+  photo: {
+    src: "assets/me/shizza-900.webp",
+    small: "assets/me/shizza-480.webp",
+    alt: "Portrait of Shizza Shafqat",
+  },
 
   // The short first-person bio at the top of the page
   bio: [
