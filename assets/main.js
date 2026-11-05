@@ -143,6 +143,27 @@ function render() {
       </div>
     </article>`).join("");
 
+  const F = C.fellowship;
+  if (F) {
+    const badge = $("#honorBadge");
+    badge.innerHTML = `<span class="tag">honor</span><span><b>${esc(F.title)}</b> · ${esc(F.term)}</span>`;
+    badge.hidden = false;
+    const fellow = $("#fellow");
+    fellow.innerHTML = `
+      <div class="fellow-body">
+        <p class="label">fellowship.md · ${esc(F.term)}</p>
+        <h3>${esc(F.title)}</h3>
+        <p class="blurb">${esc(F.blurb)}</p>
+        <p class="label">what I do:</p>
+        <ul>${F.duties.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>
+        ${F.poster ? `<div class="links"><a href="${esc(F.poster)}" target="_blank" rel="noopener">open the poster (pdf) ↗</a></div>` : ""}
+      </div>
+      ${F.posterImage ? `<a class="fellow-poster" href="${esc(F.poster || F.posterImage)}" target="_blank" rel="noopener">
+        <img src="${esc(F.posterImage)}" alt="Shizza's ${esc(F.title)} poster from the Denison CS department" loading="lazy">
+      </a>` : ""}`;
+    fellow.hidden = false;
+  }
+
   $("#denisonScene").innerHTML = SCENES.denison();
   $("#leadSummary").textContent = C.leadershipSummary;
   $("#roles").innerHTML = C.leadership.map((r) => `
