@@ -46,6 +46,7 @@
   .plane { position: absolute; left: 0; bottom: 2px; width: 18px; height: 18px;
     fill: none; stroke: #e9a23b; stroke-width: 1.5; stroke-linejoin: round;
     animation: takeoff 4.2s cubic-bezier(.45,0,.55,1) infinite; }
+  @keyframes doodle-still { 0%, 100% { opacity: 0; } 25%, 70% { opacity: 1; } }
   @keyframes takeoff {
     0% { transform: translate(0, 0); opacity: 0; }
     8% { opacity: 1; }
@@ -54,11 +55,29 @@
     90%, 100% { transform: translate(9.5rem, -2.4rem) rotate(-24deg); opacity: 0; }
   }
 
+  /* Contact portrait: tap it and little line doodles draw themselves, fly out, drift up and fade */
+  .doodle-fly { position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+    fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    pointer-events: none; opacity: 0; will-change: transform, opacity;
+    animation: doodle-fly 2.4s cubic-bezier(.2,.7,.3,1) forwards; }
+  .doodle-fly path, .doodle-fly circle, .doodle-fly rect { stroke-dasharray: 1; stroke-dashoffset: 1;
+    animation: doodle-draw .55s ease-out forwards; animation-delay: inherit; }
+  @keyframes doodle-draw { to { stroke-dashoffset: 0; } }
+  @keyframes doodle-fly {
+    0% { opacity: 0; transform: translate(var(--x0), var(--y0)) scale(.3) rotate(0deg); }
+    12% { opacity: 1; }
+    45% { opacity: 1; transform: translate(var(--x1), var(--y1)) scale(1) rotate(var(--r)); }
+    100% { opacity: 0; transform: translate(var(--x2), var(--y2)) scale(.9) rotate(calc(var(--r) * -1)); }
+  }
+
   .no-scrollbar { scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 
   @media (prefers-reduced-motion: reduce) {
     .tab-open, .grain, .caret-blink { animation: none; }
     .plane { animation: none; transform: translate(4.5rem, 0); }
+    /* No flying: the doodles just appear around the photo and fade */
+    .doodle-fly { animation: doodle-still 1.8s ease-in-out forwards; transform: translate(var(--x1), var(--y1)); }
+    .doodle-fly path, .doodle-fly circle, .doodle-fly rect { animation: none; stroke-dashoffset: 0; }
   }
 }

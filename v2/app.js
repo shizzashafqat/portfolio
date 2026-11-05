@@ -611,6 +611,82 @@ function Denison() {
 
 // ── 05 · contact ──
 
+// Little line doodles of what I'm about: laptop, a wink, AI, talking it
+// through, working together, coffee, code. Each is a 24×24 stroke drawing.
+const DOODLES = [
+  ["laptop", "M5 15V6.5A1.5 1.5 0 0 1 6.5 5h11A1.5 1.5 0 0 1 19 6.5V15|M3 18.5h18l-2-3.5H5z|M10.5 8.5 9 10l1.5 1.5|M13.5 8.5 15 10l-1.5 1.5"],
+  ["wink", "c12,12,9|M9 9.5v1|M13.8 10.2h2.6|M8.5 14.2q3.5 3.2 7 0"],
+  ["ai", "M11 3c.6 4.3 2.7 6.4 7 7-4.3.6-6.4 2.7-7 7-.6-4.3-2.7-6.4-7-7 4.3-.6 6.4-2.7 7-7z|M19 15.5v5|M16.5 18h5"],
+  ["communication", "M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 3.5V16A2.5 2.5 0 0 1 4 13.5z|M8.5 10h.01|M12 10h.01|M15.5 10h.01"],
+  ["collaboration", "c8.5,12,5|c15.5,12,5"],
+  ["coffee", "M5 9.5h11V14a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z|M16 11h1.5a2.5 2.5 0 0 1 0 5H16|M8.5 3.5q-1.2 1.5 0 3|M12 3q-1.2 1.5 0 3"],
+  ["code", "M8 7 3 12l5 5|M16 7l5 5-5 5|M13.5 5l-3 14"],
+];
+const NS = "http://www.w3.org/2000/svg";
+const doodleSvg = (spec) => {
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("class", "doodle-fly");
+  for (const part of spec.split("|")) {
+    let el;
+    if (part[0] === "c") {
+      const [cx, cy, r] = part.slice(1).split(",");
+      el = document.createElementNS(NS, "circle");
+      Object.entries({ cx, cy, r }).forEach(([k, v]) => el.setAttribute(k, v));
+    } else {
+      el = document.createElementNS(NS, "path");
+      el.setAttribute("d", part);
+    }
+    el.setAttribute("pathLength", "1"); // so the CSS can "draw" every stroke the same way
+    svg.appendChild(el);
+  }
+  return svg;
+};
+
+// Wraps the portrait in a button. Each click/tap/Enter sends the doodles flying
+// out from where you pressed; they drift up, fade, and remove themselves.
+function DoodleBurst({ children }) {
+  const layer = useRef(null);
+  const burst = (e) => {
+    const L = layer.current;
+    if (!L || L.childElementCount > 40) return;
+    const r = L.getBoundingClientRect();
+    // keyboard clicks have no pointer position: start from the middle
+    const fromPointer = e.detail > 0 && e.clientX;
+    const ox = fromPointer ? e.clientX - r.left : r.width / 2;
+    const oy = fromPointer ? e.clientY - r.top : r.height / 2;
+    const cx = r.width / 2, cy = r.height / 2;
+    const spin = Math.random() * Math.PI * 2;
+    // keep the doodles inside the screen so nothing gets cut off or scrolls sideways
+    const minX = 22 - r.left, maxX = innerWidth - 22 - r.left;
+    DOODLES.forEach(([, spec], i) => {
+      const a = spin + (i / DOODLES.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+      // land on a ring just outside the photo's edges, not on the face
+      const out = 34 + Math.random() * 30;
+      const c = Math.cos(a), sn = Math.sin(a);
+      const t = Math.min((cx + out) / Math.abs(c || 1e-6), (cy + out) / Math.abs(sn || 1e-6));
+      const x1 = Math.min(maxX, Math.max(minX, cx + c * t)), y1 = cy + sn * t;
+      const svg = doodleSvg(spec);
+      svg.style.cssText = [
+        `--x0:${ox}px`, `--y0:${oy}px`, `--x1:${x1}px`, `--y1:${y1}px`,
+        `--x2:${Math.min(maxX, Math.max(minX, x1 + c * 18 + (Math.random() - 0.5) * 24))}px`, `--y2:${y1 - 40 - Math.random() * 30}px`,
+        `--r:${Math.round((Math.random() - 0.5) * 40)}deg`, `animation-delay:${i * 45}ms`,
+        `color:${i % 3 === 2 ? "#ebe8e0" : "#e9a23b"}`,
+      ].join(";");
+      const done = () => svg.remove();
+      svg.addEventListener("animationend", (ev) => ev.target === svg && done());
+      setTimeout(done, 3200); // in case the animation never runs (background tab)
+      L.appendChild(svg);
+    });
+  };
+  return html`
+    <button type="button" onClick=${burst} aria-label="Photo of Shizza. Press to send doodles flying"
+      className="group relative block w-full cursor-pointer touch-manipulation outline-offset-[-2px]">
+      <span className="block overflow-hidden transition-transform duration-150 group-active:scale-[0.98]">${children}</span>
+      <span ref=${layer} aria-hidden="true" className="pointer-events-none absolute inset-0 z-20"></span>
+    </button>`;
+}
+
 function Contact() {
   const [copied, setCopied] = useState(false);
   const copy = () => navigator.clipboard?.writeText(C.email).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1600); });
@@ -621,15 +697,17 @@ function Contact() {
     ...(C.resume ? [["resume", "resume.pdf", u(C.resume)]] : []),
   ];
   const photo = C.photo ? html`
-    <figure className="group w-full max-w-[220px] shrink-0 border border-line bg-panel text-xs sm:max-w-[260px] lg:max-w-[300px]">
+    <figure className="relative w-full max-w-[220px] shrink-0 border border-line bg-panel text-xs sm:max-w-[260px] lg:max-w-[300px]">
       <div className="flex items-center gap-2 border-b border-line px-3 py-1.5 text-dim">
         <span className="text-accent">●</span><span className="truncate text-fg">${C.photo.src.split("/").pop().replace(/-\d+(?=\.)/, "")}</span>
       </div>
-      <img src=${u(C.photo.src)} srcSet=${C.photo.small ? `${u(C.photo.small)} 480w, ${u(C.photo.src)} 900w` : null}
-        sizes="(max-width: 640px) 220px, 300px" width="900" height="1125" alt=${C.photo.alt} loading="lazy" decoding="async"
-        className="block aspect-[4/5] w-full object-cover grayscale transition-[filter] duration-500 group-hover:grayscale-0 [@media(hover:none)]:grayscale-0" />
+      <${DoodleBurst}>
+        <img src=${u(C.photo.src)} srcSet=${C.photo.small ? `${u(C.photo.small)} 480w, ${u(C.photo.src)} 900w` : null}
+          sizes="(max-width: 640px) 220px, 300px" width="900" height="1125" alt=${C.photo.alt} loading="lazy" decoding="async"
+          draggable="false" className="block aspect-[4/5] w-full select-none object-cover" />
+      </${DoodleBurst}>
       <figcaption className="flex justify-between border-t border-line px-3 py-1.5 text-faint">
-        <span>// me</span><span className="[@media(hover:none)]:hidden">hover → color</span>
+        <span>// me</span><span>tap → doodles</span>
       </figcaption>
     </figure>` : null;
   return html`
