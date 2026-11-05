@@ -73,13 +73,13 @@ function visual(p) {
     return `
       <div class="vis stack-media frame">
         ${media.map((m, k) => `
-          <figure class="m ${m.type}">
+          <figure class="m ${m.type}${m.wide ? " wide" : ""}${m.tall ? " tall" : ""}">
             ${m.type === "video"
               ? `<video poster="${esc(m.poster || "")}" controls playsinline preload="none">
                   ${m.webm ? `<source src="${esc(m.webm)}" type="video/webm">` : ""}
                   <source src="${esc(m.src)}" type="video/mp4">
                 </video>`
-              : `<button class="screen" data-src="${esc(m.src)}" data-cap="${esc(m.caption)}"><img src="${esc(m.src)}" alt="${esc(m.caption)}" loading="lazy"></button>`}
+              : `<button class="screen" data-src="${esc(m.src)}" data-cap="${esc(m.caption)}"><img src="${esc(m.src)}" alt="${esc(m.alt || m.caption)}" loading="lazy"></button>`}
             <span class="tag mono">${pad(k + 1)}${m.type === "video" ? " ▸" : ""}</span>
           </figure>`).join("")}
       </div>
@@ -137,6 +137,11 @@ function render() {
         <h3>${esc(p.title)}</h3>
         <p>${emphasize(esc(p.blurb))}</p>
         ${p.why ? `<p class="why">${esc(p.why)}</p>` : ""}
+        ${p.credit ? `<blockquote class="credit">
+          <p class="label">${esc(p.credit.label)}</p>
+          <p>${p.credit.href ? `<a href="${esc(p.credit.href)}" target="_blank" rel="noopener">${esc(p.credit.text)}</a>` : esc(p.credit.text)}</p>
+          ${p.credit.note ? `<p class="label">${esc(p.credit.note)}</p>` : ""}
+        </blockquote>` : ""}
         ${p.stat ? `<div class="metric"><span class="label">key metric</span><b>${esc(p.stat)}</b></div>` : ""}
         <div class="stack">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
         ${p.links.length ? `<div class="links">${linkList(p.links)}</div>` : ""}
