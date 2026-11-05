@@ -18,8 +18,6 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const u = (p) => (/^(https?:|mailto:|#|\.\.\/)/.test(p) ? p : "../" + p);
 const pad = (n) => String(n).padStart(2, "0");
 const slug = (t) => t.toLowerCase().replace(/\./g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "x";
-// Straight to the PDF when there is one, otherwise the resume tab
-const RESUME = C.resume ? u(C.resume) : "#resume";
 const LENS = { ds: "data science", swe: "software engineering", pm: "product management" };
 
 const TITLE = "Shizza Shafqat: Software / Data / Product";
@@ -30,7 +28,6 @@ const TABS = [
   { id: "artwork", file: "03_artwork.tsx" },
   { id: "denison", file: "04_at_denison.tsx" },
   { id: "contact", file: "05_contact.tsx" },
-  { id: "resume", file: "06_resume.pdf" },
 ];
 
 // "#projects/hot-wheels-garage" → { tab: "projects", sub: "hot-wheels-garage" }
@@ -319,7 +316,7 @@ function Home() {
           <${FellowBadge} />
           <div className="mt-8 flex flex-wrap gap-3 text-sm">
             <a href="#projects" className="bg-accent px-4 py-2 font-medium text-ink hover:bg-fg">open projects →</a>
-            <a href=${RESUME} target=${C.resume ? "_blank" : null} rel="noopener" className="border border-line px-4 py-2 hover:border-accent">resume.pdf</a>
+            ${C.resume ? html`<a href=${u(C.resume)} target="_blank" rel="noopener" className="border border-line px-4 py-2 hover:border-accent">resume.pdf</a>` : null}
             <a href="#artwork" className="border border-line px-4 py-2 hover:border-accent">see artwork</a>
           </div>
         </div>
@@ -621,7 +618,7 @@ function Contact() {
     ["email", C.email, `mailto:${C.email}`],
     ["linkedin", C.linkedin.replace(/^https?:\/\//, ""), C.linkedin],
     ["github", C.github.replace(/^https?:\/\//, ""), C.github],
-    ["resume", C.resume ? "resume.pdf" : "06_resume.pdf", RESUME],
+    ...(C.resume ? [["resume", "resume.pdf", u(C.resume)]] : []),
   ];
   return html`
     <div className="flex min-h-[60vh] flex-col justify-center">
@@ -634,59 +631,6 @@ function Contact() {
             <a href=${href} target=${href.startsWith("#") || href.startsWith("mailto") ? null : "_blank"} rel="noopener" className="min-w-0 break-all hover:text-accent">${label} <span className="text-accent">↗</span></a>
             ${k === "email" ? html`<button onClick=${copy} className="ml-auto border border-line px-2 py-0.5 text-xs text-dim hover:border-accent hover:text-fg">${copied ? "copied ✓" : "copy"}</button>` : null}
           </div>`)}
-      </div>
-    </div>`;
-}
-
-// ── 06 · resume ──
-// Built from content.js, so it's always current. If a PDF is set in
-// content.js (`resume`), a download button links to it too.
-
-function Resume() {
-  const A = C.about;
-  const H = ({ children }) => html`<h3 className="mt-6 border-b border-neutral-300 pb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-500">${children}</h3>`;
-  return html`
-    <div>
-      <div className="mb-4 flex flex-wrap items-center gap-3 border border-line bg-panel px-4 py-2 text-xs text-dim">
-        <span className="text-fg">06_resume.pdf</span>
-        <span className="ml-auto flex gap-2">
-          ${C.resume ? html`<a href=${u(C.resume)} download className="border border-line px-2 py-1 hover:border-accent hover:text-fg">download pdf</a>` : null}
-          <button onClick=${() => print()} className="bg-accent px-2 py-1 font-medium text-ink hover:bg-fg">print / save as pdf</button>
-        </span>
-      </div>
-      <div className="overflow-x-auto bg-raised p-3 sm:p-8">
-        <article id="paper" className="mx-auto max-w-[820px] bg-[#fbfaf7] px-6 py-8 text-[12.5px] leading-relaxed text-neutral-900 shadow-2xl sm:px-12 sm:py-12">
-          <h2 className="text-2xl font-bold tracking-tight">${C.name}</h2>
-          <p className="mt-1 text-neutral-600">${C.email} · ${C.linkedin.replace(/^https?:\/\//, "")} · ${C.github.replace(/^https?:\/\//, "")}</p>
-
-          <${H}>education</${H}>
-          <div className="mt-2 flex flex-wrap justify-between gap-x-4"><b>Denison University</b><span className="text-neutral-600">Granville, OH · May 2027</span></div>
-          <p>B.S. ${A.study.replace(/^computer science \(b\.s\.\)/, "Computer Science")} · GPA ${A.gpa}</p>
-          <p className="text-neutral-600">Courses: ${A.courses.join(", ")}</p>
-
-          <${H}>experience</${H}>
-          ${C.experience.map((j) => html`
-            <div key=${j.role} className="mt-3">
-              <div className="flex flex-wrap justify-between gap-x-4"><b>${j.role}</b><span className="text-neutral-600">${j.when}</span></div>
-              <p className="text-neutral-600">${j.org} · ${j.where}</p>
-              <ul className="mt-1 list-disc space-y-0.5 pl-5">${j.bullets.map((b) => html`<li key=${b.text}>${b.text}</li>`)}</ul>
-            </div>`)}
-
-          <${H}>projects</${H}>
-          ${C.projects.map((p) => html`
-            <p key=${p.title} className="mt-2"><b>${p.title}</b> <span className="text-neutral-600">· ${p.stack.join(", ")}</span><br />${p.blurb.split(/(?<=\.)\s/)[0]}</p>`)}
-
-          <${H}>leadership</${H}>
-          <ul className="mt-2 list-disc space-y-0.5 pl-5">
-            ${C.leadership.map((r) => html`<li key=${r.title}><b>${r.title}</b>: ${r.note}</li>`)}
-            <li>${C.leadershipSummary}</li>
-          </ul>
-
-          <${H}>skills</${H}>
-          <p className="mt-2"><b>Languages:</b> ${C.skills.languages.join(", ")}</p>
-          <p><b>Frameworks:</b> ${C.skills.frameworks.join(", ")}</p>
-          <p><b>Tools:</b> ${C.skills.tools.join(", ")}</p>
-        </article>
       </div>
     </div>`;
 }
@@ -824,7 +768,7 @@ function App() {
     else scrollTo(0, 0);
   }, [route]);
 
-  const pages = { home: Home, projects: Projects, artwork: Artwork, denison: Denison, contact: Contact, resume: Resume };
+  const pages = { home: Home, projects: Projects, artwork: Artwork, denison: Denison, contact: Contact };
   const Page = pages[route.tab];
   return html`
     <${React.Fragment}>
