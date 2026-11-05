@@ -83,7 +83,7 @@ function visual(p) {
             <span class="tag mono">${pad(k + 1)}${m.type === "video" ? " ▸" : ""}</span>
           </figure>`).join("")}
       </div>
-      <ol class="vis-cap">${media.map((m, k) => `<li class="label"><b>${pad(k + 1)}</b> ${esc(m.caption)}</li>`).join("")}</ol>`;
+      <ol class="vis-cap">${media.map((m, k) => `<li class="label"><b>${pad(k + 1)}</b> ${esc(m.caption)}</li>`).join("")}${p.shipped ? `<li class="label">${esc(p.shipped)}</li>` : ""}</ol>`;
   }
   if (p.shipped) {
     return `
