@@ -131,6 +131,9 @@ window.CONTENT = {
       stack: ["Node.js", "Webhooks", "Airtable", "Slack API"],
       stat: "4–6 hrs/week saved",
       shipped: "product shipped · can't share the link",
+      media: [
+        { type: "image", src: "assets/projects/possible-reminders-flow.svg", caption: "the reminder automation, drawn · n8n checks members against form replies, then pings them on slack 72h and 24h ahead" },
+      ],
       why: "Matching mentees to mentors by hand from their ranked preferences cost the team hours every week. I turned it into one click, with each mentor capped at 7 mentees.",
       links: [],
     },
