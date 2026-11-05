@@ -114,13 +114,13 @@ window.CONTENT = {
   projects: [
     {
       title: "Token Dashboard",
-      kind: "Usage analytics for Denison AI",
+      kind: "Usage analytics for DenAI at Denison",
       lens: ["ds", "swe", "pm"],
-      blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI, so the university can actually see how many people use AI, how they use it, and what it costs.",
-      stack: ["JavaScript", "Data pipelines", "APIs"],
+      blurb: "An automated pipeline and JavaScript dashboard that follows 100M+ tokens a month across Anthropic and OpenAI. I use LiteLLM and our API keys to pull the usage data for DenAI, so Denison can actually see how many people use AI, how they use it, and what it costs.",
+      stack: ["JavaScript", "LiteLLM", "Data pipelines", "APIs"],
       stat: "100M+ tokens/mo",
       shipped: "product shipped · can't share the link",
-      why: "Built for the administrators who run Denison's AI program, so they can see where AI funding goes, how much the college spends on tokens, and how many people are using it.",
+      why: "Built for the administrators who run Denison's AI program, so they can track where AI funding goes, how much the college spends on tokens, and how many people are using it. I'm now researching how to allocate that funding fairly, and building an application on top of the data that recommends next moves. That part is still in progress.",
       links: [],
     },
     {
