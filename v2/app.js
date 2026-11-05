@@ -611,11 +611,11 @@ function Denison() {
 
 // ── 05 · contact ──
 
-// Little line doodles of what I'm about: laptop, a wink, AI, talking it
+// Little line doodles of what I'm about: laptop, WiNI (my CS club), AI, talking it
 // through, working together, coffee, code. Each is a 24×24 stroke drawing.
 const DOODLES = [
   ["laptop", "M5 15V6.5A1.5 1.5 0 0 1 6.5 5h11A1.5 1.5 0 0 1 19 6.5V15|M3 18.5h18l-2-3.5H5z|M10.5 8.5 9 10l1.5 1.5|M13.5 8.5 15 10l-1.5 1.5"],
-  ["wink", "c12,12,9|M9 9.5v1|M13.8 10.2h2.6|M8.5 14.2q3.5 3.2 7 0"],
+  ["wini", "c12,12,10.5|M4.8 9.5l1.4 5 1.4-3.6 1.4 3.6 1.4-5|M12 11.6v2.9|M12 9.6v.01|M13.6 14.5v-5l3.4 5v-5|M18.8 9.5v5"],
   ["ai", "M11 3c.6 4.3 2.7 6.4 7 7-4.3.6-6.4 2.7-7 7-.6-4.3-2.7-6.4-7-7 4.3-.6 6.4-2.7 7-7z|M19 15.5v5|M16.5 18h5"],
   ["communication", "M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 3.5V16A2.5 2.5 0 0 1 4 13.5z|M8.5 10h.01|M12 10h.01|M15.5 10h.01"],
   ["collaboration", "c8.5,12,5|c15.5,12,5"],
